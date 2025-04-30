@@ -1,7 +1,6 @@
 package com.codespace.tutorias.models;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalTime;
 
