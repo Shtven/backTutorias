@@ -1,5 +1,8 @@
 package com.codespace.tutorias.services;
 
+import com.codespace.tutorias.DTO.TutoradoDTO;
+import com.codespace.tutorias.DTO.TutoradosPublicosDTO;
+import com.codespace.tutorias.Mapping.TutoradoMapping;
 import com.codespace.tutorias.models.Tutorados;
 import com.codespace.tutorias.repository.TutoradoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,21 @@ public class TutoradosService {
 
     @Autowired
     private TutoradoRepository tutoradoRepository;
+    @Autowired
+    private TutoradoMapping tutoradoMapping;
 
-    public List<Tutorados> listarTutorados() {
-        return tutoradoRepository.findAll();
+    public List<TutoradoDTO> listarTutoradosPrivados() {
+        return tutoradoRepository.findAll().stream()
+                .map(tutoradoMapping::convertirADTO).toList();
     }
 
-    public Tutorados crearTutorados(Tutorados tutorados) {
+    public List<TutoradosPublicosDTO> listarTutoradosPublicos() {
+        return tutoradoRepository.findAll().stream()
+                .map(tutoradoMapping::convertirAFront).toList();
+    }
+
+    public Tutorados crearTutorados(TutoradoDTO dto) {
+        Tutorados tutorados = tutoradoMapping.convertirAEntidad(dto);
         return tutoradoRepository.save(tutorados);
     }
 
@@ -26,7 +38,11 @@ public class TutoradosService {
         tutoradoRepository.deleteById(id);
     }
 
-    public Optional<Tutorados> buscarTutorado(String id){
-        return tutoradoRepository.findById(id);
+    public Optional<TutoradosPublicosDTO> buscarTutoradoPublico(String id){
+        return tutoradoRepository.findById(id).map(tutoradoMapping::convertirAFront);
+    }
+
+    public Optional<TutoradoDTO> buscarTutoradoPrivado(String id){
+        return tutoradoRepository.findById(id).map(tutoradoMapping::convertirADTO);
     }
 }
