@@ -10,6 +10,8 @@ public class Materia {
 
     private String nombreMateria;
 
+    public Materia(){}
+
     public int getNrc() {
         return nrc;
     }

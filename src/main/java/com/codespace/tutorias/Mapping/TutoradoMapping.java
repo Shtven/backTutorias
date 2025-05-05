@@ -2,12 +2,12 @@ package com.codespace.tutorias.Mapping;
 
 import com.codespace.tutorias.DTO.TutoradoDTO;
 import com.codespace.tutorias.DTO.TutoradosPublicosDTO;
-import com.codespace.tutorias.models.Tutorados;
+import com.codespace.tutorias.models.Tutorado;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TutoradoMapping {
-    public TutoradosPublicosDTO convertirAFront(Tutorados entidad) {
+    public TutoradosPublicosDTO convertirAFront(Tutorado entidad) {
         TutoradosPublicosDTO dto = new TutoradosPublicosDTO();
         dto.setMatricula(entidad.getMatricula());
         dto.setNombre(entidad.getNombre());
@@ -17,7 +17,7 @@ public class TutoradoMapping {
         return dto;
     }
 
-    public TutoradoDTO convertirADTO(Tutorados entidad) {
+    public TutoradoDTO convertirADTO(Tutorado entidad) {
         TutoradoDTO dto = new TutoradoDTO();
         dto.setMatricula(entidad.getMatricula());
         dto.setNombre(entidad.getNombre());
@@ -28,8 +28,8 @@ public class TutoradoMapping {
         return dto;
     }
 
-    public Tutorados convertirAEntidad(TutoradoDTO dto){
-        Tutorados entidad = new Tutorados();
+    public Tutorado convertirAEntidad(TutoradoDTO dto){
+        Tutorado entidad = new Tutorado();
         entidad.setMatricula(dto.getMatricula());
         entidad.setNombre(dto.getNombre());
         entidad.setApellidoP(dto.getApellidoP());

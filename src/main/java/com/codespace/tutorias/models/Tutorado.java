@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.codespace.tutorias.models;
 
 import jakarta.persistence.Entity;
@@ -11,8 +8,9 @@ import jakarta.persistence.Id;
  *
  * @author shtven
  */
+
 @Entity
-public class Tutores {
+public class Tutorado {
     @Id
     private String matricula;
 
@@ -22,9 +20,9 @@ public class Tutores {
     private String correo;
     private String password;
 
-    public Tutores(){ }
+    public Tutorado(){ }
 
-    public Tutores(String matricula, String nombre, String apellidoP, String apellidoM, String correo, String password) {
+    public Tutorado(String matricula, String nombre, String apellidoP, String apellidoM, String correo, String password) {
         this.matricula = matricula;
         this.nombre = nombre;
         this.apellidoP = apellidoP;
@@ -32,7 +30,6 @@ public class Tutores {
         this.correo = correo;
         this.password = password;
     }
-
 
     public String getMatricula() {
         return matricula;

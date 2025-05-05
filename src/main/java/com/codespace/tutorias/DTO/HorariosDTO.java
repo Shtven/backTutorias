@@ -8,7 +8,7 @@ public class HorariosDTO {
     private LocalTime horaInicio;
     private LocalTime horaFin;
     private TutorDTO tutor;
-    private MateriasDTO materia;
+    private MateriaDTO materia;
 
     public HorariosDTO(){}
 
@@ -52,11 +52,11 @@ public class HorariosDTO {
         this.tutor = tutor;
     }
 
-    public MateriasDTO getMateria() {
+    public MateriaDTO getMateria() {
         return materia;
     }
 
-    public void setMateria(MateriasDTO materia) {
+    public void setMateria(MateriaDTO materia) {
         this.materia = materia;
     }
 }

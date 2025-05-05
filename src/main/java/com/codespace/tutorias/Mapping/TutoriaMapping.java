@@ -2,12 +2,14 @@ package com.codespace.tutorias.Mapping;
 
 import com.codespace.tutorias.DTO.*;
 import com.codespace.tutorias.models.Horario;
-import com.codespace.tutorias.models.Tutorados;
+import com.codespace.tutorias.models.Tutorado;
 import com.codespace.tutorias.models.Tutoria;
 import com.codespace.tutorias.repository.HorarioRepository;
 import com.codespace.tutorias.repository.TutoradoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class TutoriaMapping {
@@ -28,8 +30,15 @@ public class TutoriaMapping {
         entidad.setEdificio(dto.getEdificio());
         entidad.setAula(dto.getAula());
 
-        Tutorados tutorado = tutoradoRepository.findById(dto.getTutorados().getMatricula()).orElseThrow();
-        entidad.setTutorados(tutorado);
+        if (dto.getTutorados() != null && !dto.getTutorados().isEmpty()) {
+            List<Tutorado> listaTutorados = dto.getTutorados().stream()
+                    .map(t -> tutoradoRepository.findById(t.getMatricula()).orElseThrow())
+                    .toList();
+            entidad.setTutorados(listaTutorados);
+        } else {
+            entidad.setTutorados(List.of());
+        }
+        entidad.setEstado(dto.getEstado());
 
         return entidad;
     }
@@ -54,26 +63,32 @@ public class TutoriaMapping {
 
         horariosDTO.setTutor(tutoresDTO);
 
-        MateriasDTO materiasDTO = new MateriasDTO();
-        materiasDTO.setNrc(entidad.getHorario().getMateria().getNrc());
-        materiasDTO.setNombreMateria(entidad.getHorario().getMateria().getNombreMateria());
+        MateriaDTO materiaDTO = new MateriaDTO();
+        materiaDTO.setNrc(entidad.getHorario().getMateria().getNrc());
+        materiaDTO.setNombreMateria(entidad.getHorario().getMateria().getNombreMateria());
 
-        horariosDTO.setMateria(materiasDTO);
+        horariosDTO.setMateria(materiaDTO);
 
         dto.setHorario(horariosDTO);
         dto.setFecha(entidad.getFecha());
         dto.setEdificio(entidad.getEdificio());
         dto.setAula(entidad.getAula());
 
-        TutoradoDTO tutoradosDTO = new TutoradoDTO();
-        tutoradosDTO.setMatricula(entidad.getTutorados().getMatricula());
-        tutoradosDTO.setNombre(entidad.getTutorados().getNombre());
-        tutoradosDTO.setApellidoP(entidad.getTutorados().getApellidoP());
-        tutoradosDTO.setApellidoM(entidad.getTutorados().getApellidoM());
-        tutoradosDTO.setCorreo(entidad.getTutorados().getCorreo());
-        tutoradosDTO.setPassword(entidad.getTutorados().getPassword());
+        List<TutoradoDTO> tutoradosDTO = entidad.getTutorados().stream()
+                .map(t -> {
+                    TutoradoDTO dtoT = new TutoradoDTO();
+                    dtoT.setMatricula(t.getMatricula());
+                    dtoT.setNombre(t.getNombre());
+                    dtoT.setApellidoP(t.getApellidoP());
+                    dtoT.setApellidoM(t.getApellidoM());
+                    dtoT.setCorreo(t.getCorreo());
+                    dtoT.setPassword(t.getPassword());
+                    return dtoT;
+                }).toList();
+
 
         dto.setTutorados(tutoradosDTO);
+        dto.setEstado(entidad.getEstado());
 
         return dto;
     }
@@ -97,25 +112,30 @@ public class TutoriaMapping {
 
         horariosDTO.setTutor(tutoresDTO);
 
-        MateriasDTO materiasDTO = new MateriasDTO();
-        materiasDTO.setNrc(entidad.getHorario().getMateria().getNrc());
-        materiasDTO.setNombreMateria(entidad.getHorario().getMateria().getNombreMateria());
+        MateriaDTO materiaDTO = new MateriaDTO();
+        materiaDTO.setNrc(entidad.getHorario().getMateria().getNrc());
+        materiaDTO.setNombreMateria(entidad.getHorario().getMateria().getNombreMateria());
 
-        horariosDTO.setMateria(materiasDTO);
+        horariosDTO.setMateria(materiaDTO);
 
         dto.setHorario(horariosDTO);
         dto.setFecha(entidad.getFecha());
         dto.setEdificio(entidad.getEdificio());
         dto.setAula(entidad.getAula());
 
-        TutoradosPublicosDTO tutoradosDTO = new TutoradosPublicosDTO();
-        tutoradosDTO.setMatricula(entidad.getTutorados().getMatricula());
-        tutoradosDTO.setNombre(entidad.getTutorados().getNombre());
-        tutoradosDTO.setApellidoP(entidad.getTutorados().getApellidoP());
-        tutoradosDTO.setApellidoM(entidad.getTutorados().getApellidoM());
-        tutoradosDTO.setCorreo(entidad.getTutorados().getCorreo());
+        List<TutoradosPublicosDTO> tutoradosDTO = entidad.getTutorados().stream()
+                .map(t -> {
+                    TutoradosPublicosDTO dtoT = new TutoradosPublicosDTO();
+                    dtoT.setMatricula(t.getMatricula());
+                    dtoT.setNombre(t.getNombre());
+                    dtoT.setApellidoP(t.getApellidoP());
+                    dtoT.setApellidoM(t.getApellidoM());
+                    dtoT.setCorreo(t.getCorreo());
+                    return dtoT;
+                }).toList();
 
         dto.setTutorados(tutoradosDTO);
+        dto.setEstado(entidad.getEstado());
 
         return dto;
     }

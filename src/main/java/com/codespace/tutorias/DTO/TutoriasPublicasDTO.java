@@ -1,6 +1,7 @@
 package com.codespace.tutorias.DTO;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class TutoriasPublicasDTO {
     private int idTutoria;
@@ -8,7 +9,8 @@ public class TutoriasPublicasDTO {
     private LocalDate fecha;
     private int edificio;
     private int aula;
-    private TutoradosPublicosDTO tutorados;
+    private List<TutoradosPublicosDTO> tutorados;
+    private String estado;
 
     public TutoriasPublicasDTO(){}
 
@@ -52,11 +54,19 @@ public class TutoriasPublicasDTO {
         this.aula = aula;
     }
 
-    public TutoradosPublicosDTO getTutorados() {
+    public List<TutoradosPublicosDTO> getTutorados() {
         return tutorados;
     }
 
-    public void setTutorados(TutoradosPublicosDTO tutorados) {
+    public void setTutorados(List<TutoradosPublicosDTO> tutorados) {
         this.tutorados = tutorados;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
