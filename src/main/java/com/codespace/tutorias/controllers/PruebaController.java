@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 
-public class pruebaController {
+public class PruebaController {
         
     @GetMapping("/hola")
     public String hola(){

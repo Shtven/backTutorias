@@ -1,8 +1,7 @@
 package com.codespace.tutorias.controllers;
 
-import com.codespace.tutorias.DTO.TutoradosPublicosDTO;
 import com.codespace.tutorias.DTO.TutoresPublicosDTO;
-import com.codespace.tutorias.services.TutoresService;
+import com.codespace.tutorias.services.TutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,15 +16,15 @@ import java.util.List;
 public class TutorController {
 
     @Autowired
-    private TutoresService tutoresService;
+    private TutorService tutorService;
 
     @GetMapping("/all")
     public List<TutoresPublicosDTO> getTutores(){
-        return tutoresService.mostrarTutoresPublicos();
+        return tutorService.mostrarTutoresPublicos();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TutoresPublicosDTO> findTutor(@PathVariable String id){
-        return tutoresService.buscarTutoradoPublico(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return tutorService.buscarTutoradoPublico(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 }

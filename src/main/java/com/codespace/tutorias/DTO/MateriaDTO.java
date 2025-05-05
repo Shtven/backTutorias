@@ -1,10 +1,10 @@
 package com.codespace.tutorias.DTO;
 
-public class MateriasDTO {
+public class MateriaDTO {
     private int nrc;
     private String nombreMateria;
 
-    public MateriasDTO(){}
+    public MateriaDTO(){}
 
     public int getNrc() {
         return nrc;

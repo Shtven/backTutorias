@@ -3,7 +3,7 @@ package com.codespace.tutorias.services;
 import com.codespace.tutorias.DTO.TutoradoDTO;
 import com.codespace.tutorias.DTO.TutoradosPublicosDTO;
 import com.codespace.tutorias.Mapping.TutoradoMapping;
-import com.codespace.tutorias.models.Tutorados;
+import com.codespace.tutorias.models.Tutorado;
 import com.codespace.tutorias.repository.TutoradoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TutoradosService {
+public class TutoradoService {
 
     @Autowired
     private TutoradoRepository tutoradoRepository;
@@ -29,9 +29,9 @@ public class TutoradosService {
                 .map(tutoradoMapping::convertirAFront).toList();
     }
 
-    public Tutorados crearTutorados(TutoradoDTO dto) {
-        Tutorados tutorados = tutoradoMapping.convertirAEntidad(dto);
-        return tutoradoRepository.save(tutorados);
+    public Tutorado crearTutorados(TutoradoDTO dto) {
+        Tutorado tutorado = tutoradoMapping.convertirAEntidad(dto);
+        return tutoradoRepository.save(tutorado);
     }
 
     public void eliminarTutorado(String id){

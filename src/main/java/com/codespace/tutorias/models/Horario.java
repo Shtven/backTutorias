@@ -17,7 +17,7 @@ public class Horario {
 
     @ManyToOne
     @JoinColumn(name= "matricula")
-    private Tutores tutor;
+    private Tutor tutor;
 
     @ManyToOne
     @JoinColumn(name= "nrc")
@@ -57,11 +57,11 @@ public class Horario {
         this.horaFin = horaFin;
     }
 
-    public Tutores getTutor() {
+    public Tutor getTutor() {
         return tutor;
     }
 
-    public void setTutor(Tutores tutor) {
+    public void setTutor(Tutor tutor) {
         this.tutor = tutor;
     }
 

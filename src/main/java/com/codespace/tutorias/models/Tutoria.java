@@ -4,6 +4,8 @@ package com.codespace.tutorias.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Tutoria {
@@ -15,9 +17,13 @@ public class Tutoria {
     @JoinColumn(name= "idHorario")
     private Horario horario;
 
-    @ManyToOne
-    @JoinColumn(name= "matricula")
-    private Tutorados tutorados;
+    @ManyToMany
+    @JoinTable(
+            name = "tutorias_tutorados",
+            joinColumns = @JoinColumn(name = "id_tutoria"),
+            inverseJoinColumns = @JoinColumn(name = "matricula")
+    )
+    private List<Tutorado> tutorados = new ArrayList<>();
 
     private LocalDate fecha;
     private int edificio;
@@ -42,11 +48,11 @@ public class Tutoria {
         this.horario = horario;
     }
 
-    public Tutorados getTutorados() {
+    public List<Tutorado> getTutorados() {
         return tutorados;
     }
 
-    public void setTutorados(Tutorados tutorados) {
+    public void setTutorados(List<Tutorado> tutorados) {
         this.tutorados = tutorados;
     }
 
