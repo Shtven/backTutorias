@@ -31,20 +31,20 @@ public class TutorService {
                 .toList();
     }
 
-    public Tutor crearTutores(TutorDTO dto) {
+    public TutorDTO crearTutores(TutorDTO dto) {
         Tutor tutor = tutorMapping.convertirAEntidad(dto);
-        return tutorRepository.save(tutor);
+        return tutorMapping.convertirADTO(tutorRepository.save(tutor));
     }
 
     public void eliminarTutorado(String id){
         tutorRepository.deleteById(id);
     }
 
-    public Optional<TutoresPublicosDTO> buscarTutoradoPublico(String id){
+    public Optional<TutoresPublicosDTO> buscarTutorPublico(String id){
         return tutorRepository.findById(id).map(tutorMapping::convertirAFront);
     }
 
-    public Optional<TutorDTO> buscarTutoradoPrivado(String id){
+    public Optional<TutorDTO> buscarTutorPrivado(String id){
         return tutorRepository.findById(id).map(tutorMapping::convertirADTO);
     }
 }

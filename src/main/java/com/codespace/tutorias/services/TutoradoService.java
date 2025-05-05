@@ -29,9 +29,9 @@ public class TutoradoService {
                 .map(tutoradoMapping::convertirAFront).toList();
     }
 
-    public Tutorado crearTutorados(TutoradoDTO dto) {
+    public TutoradoDTO crearTutorados(TutoradoDTO dto) {
         Tutorado tutorado = tutoradoMapping.convertirAEntidad(dto);
-        return tutoradoRepository.save(tutorado);
+        return tutoradoMapping.convertirADTO(tutoradoRepository.save(tutorado));
     }
 
     public void eliminarTutorado(String id){

@@ -21,9 +21,9 @@ public class TutoriasService {
         return tutoriasRepository.findAll().stream().map(tutoriaMapping::convertirAPublicas).toList();
     }
 
-    public Tutoria generarTutoria(TutoriasDTO dto){
+    public TutoriasDTO generarTutoria(TutoriasDTO dto){
         Tutoria tutoria = tutoriaMapping.convertirAEntidad(dto);
-        return tutoriasRepository.save(tutoria);
+        return tutoriaMapping.convertirADTO(tutoriasRepository.save(tutoria));
     }
 
     public Optional<TutoriasPublicasDTO> findTutoriaPublica(int id){
@@ -33,5 +33,4 @@ public class TutoriasService {
     public Optional<TutoriasDTO> findTutoriaPrivada(int id){
         return tutoriasRepository.findById(id).map(tutoriaMapping::convertirADTO);
     }
-
 }
