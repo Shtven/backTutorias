@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
  */
 
 @Entity
-public class Tutorados {
+public class Tutorado {
     @Id
     private String matricula;
 
@@ -20,9 +20,9 @@ public class Tutorados {
     private String correo;
     private String password;
 
-    public Tutorados(){ }
+    public Tutorado(){ }
 
-    public Tutorados(String matricula, String nombre, String apellidoP, String apellidoM, String correo, String password) {
+    public Tutorado(String matricula, String nombre, String apellidoP, String apellidoM, String correo, String password) {
         this.matricula = matricula;
         this.nombre = nombre;
         this.apellidoP = apellidoP;

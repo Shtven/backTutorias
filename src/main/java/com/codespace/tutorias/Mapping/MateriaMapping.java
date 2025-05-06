@@ -1,31 +1,27 @@
 package com.codespace.tutorias.Mapping;
 
-import com.codespace.tutorias.DTO.MateriasDTO;
-import com.codespace.tutorias.DTO.MateriaPublicaDTO;
+import com.codespace.tutorias.DTO.MateriaDTO;
 import com.codespace.tutorias.models.Materia;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MateriaMapping {
 
-    public Materia convertirAEntidad(MateriasDTO dto) {
+    public Materia convetirAEntidad(MateriaDTO dto){
         Materia entidad = new Materia();
+
         entidad.setNrc(dto.getNrc());
         entidad.setNombreMateria(dto.getNombreMateria());
+
         return entidad;
     }
 
-    public MateriasDTO convertirADTO(Materia entidad) {
-        MateriasDTO dto = new MateriasDTO();
-        dto.setNrc(entidad.getNrc());
-        dto.setNombreMateria(entidad.getNombreMateria());
-        return dto;
-    }
+    public MateriaDTO convertirADTO(Materia entidad){
+        MateriaDTO dto = new MateriaDTO();
 
-    public MateriaPublicaDTO convertirAPublica(Materia entidad) {
-        MateriaPublicaDTO dto = new MateriaPublicaDTO();
         dto.setNrc(entidad.getNrc());
         dto.setNombreMateria(entidad.getNombreMateria());
+
         return dto;
     }
 }

@@ -1,39 +1,40 @@
 package com.codespace.tutorias.Mapping;
 
 import com.codespace.tutorias.DTO.AsistenciaDTO;
-import com.codespace.tutorias.DTO.AsistenciaPublicaDTO;
 import com.codespace.tutorias.models.Asistencia;
 import com.codespace.tutorias.models.Tutoria;
+import com.codespace.tutorias.repository.TutoriasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.codespace.tutorias.repository.TutoriasRepository;
 
 @Component
 public class AsistenciaMapping {
 
     @Autowired
-    private TutoriasRepository tutoriaRepository;
+    private TutoriasRepository tutoriasRepository;
+    @Autowired
+    private TutoriaMapping tutoriaMapping;
 
-    public Asistencia convertirAEntidad(AsistenciaDTO dto) {
+    public Asistencia convertirAEntidad(AsistenciaDTO dto){
         Asistencia entidad = new Asistencia();
-        Tutoria tut = tutoriaRepository.findById(dto.getIdTutoria())
-                         .orElseThrow(() -> new IllegalArgumentException("Tutoria no encontrada"));
-        entidad.setTutoria(tut);
+
+        entidad.setIdAsistencia(dto.getIdAsistencia());
+
+        Tutoria tutoria = tutoriasRepository.findById(dto.getTutoria().getIdTutoria()).orElseThrow(() -> new RuntimeException("Tutoria no encontrada con ID: " + dto.getTutoria().getIdTutoria()));
+
+        entidad.setTutoria(tutoria);
         entidad.setAsistencia(dto.getAsistencia());
+
         return entidad;
     }
 
-    public AsistenciaPublicaDTO convertirAPublica(Asistencia entidad) {
-        AsistenciaPublicaDTO dto = new AsistenciaPublicaDTO();
-        dto.setIdAsistencia(entidad.getIdAsistencia());
-        dto.setAsistencia(entidad.getAsistencia());
+    public AsistenciaDTO convertirADTO(Asistencia entidad){
+        AsistenciaDTO dto = new AsistenciaDTO();
 
-        var tutPubDto = new com.codespace.tutorias.DTO.TutoriasPublicasDTO();
-        tutPubDto.setIdTutoria(entidad.getTutoria().getIdTutoria());
-        tutPubDto.setFecha(entidad.getTutoria().getFecha());
-        tutPubDto.setEdificio(entidad.getTutoria().getEdificio());
-        tutPubDto.setAula(entidad.getTutoria().getAula());
-        dto.setTutoria(tutPubDto);
+        dto.setIdAsistencia(entidad.getIdAsistencia());
+
+        dto.setTutoria(tutoriaMapping.convertirADTO(entidad.getTutoria()));
+        dto.setAsistencia(entidad.getAsistencia());
 
         return dto;
     }

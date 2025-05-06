@@ -1,17 +1,26 @@
 package com.codespace.tutorias.DTO;
 
 public class AsistenciaDTO {
-    private int idTutoria;
+    private int idAsistencia;
+    private TutoriasDTO tutoria;
     private int asistencia;
 
-    public AsistenciaDTO() {}
+    public AsistenciaDTO(){}
 
-    public int getIdTutoria() {
-        return idTutoria;
+    public int getIdAsistencia() {
+        return idAsistencia;
     }
 
-    public void setIdTutoria(int idTutoria) {
-        this.idTutoria = idTutoria;
+    public void setIdAsistencia(int idAsistencia) {
+        this.idAsistencia = idAsistencia;
+    }
+
+    public TutoriasDTO getTutoria() {
+        return tutoria;
+    }
+
+    public void setTutoria(TutoriasDTO tutoria) {
+        this.tutoria = tutoria;
     }
 
     public int getAsistencia() {
@@ -22,4 +31,3 @@ public class AsistenciaDTO {
         this.asistencia = asistencia;
     }
 }
-
