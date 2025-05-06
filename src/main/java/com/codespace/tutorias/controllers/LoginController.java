@@ -3,6 +3,7 @@ package com.codespace.tutorias.controllers;
 import com.codespace.tutorias.DTO.LoginDTO;
 import com.codespace.tutorias.DTO.TutorDTO;
 import com.codespace.tutorias.DTO.TutoradoDTO;
+import com.codespace.tutorias.JWT.JWTUtil;
 import com.codespace.tutorias.services.TutorService;
 import com.codespace.tutorias.services.TutoradoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class LoginController {
     private TutorService tutorService;
     @Autowired
     private TutoradoService tutoradoService;
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> iniciarSesion(@RequestBody LoginDTO dto){
@@ -31,12 +34,14 @@ public class LoginController {
 
         Optional<TutorDTO> tutor = tutorService.buscarTutorPrivado(matricula);
         if(tutor.isPresent() && tutor.get().getPassword().equals(password)){
-            return ResponseEntity.ok(Map.of("rol", "tutor", "usuario", tutor.get()));
+            String token = jwtUtil.generateToken(matricula, "tutor");
+            return ResponseEntity.ok(Map.of("token", token, "rol", "tutor"));
         }
 
         Optional<TutoradoDTO> tutorado = tutoradoService.buscarTutoradoPrivado(matricula);
         if(tutorado.isPresent() && tutorado.get().getPassword().equals(password)){
-            return ResponseEntity.ok(Map.of("rol", "tutorado", "usuario", tutorado.get()));
+            String token = jwtUtil.generateToken(matricula, "tutorado");
+            return ResponseEntity.ok(Map.of("token", token, "rol", "tutorado"));
         }
 
         return ResponseEntity.status(401).body("Usuario y/o contraseña incorrectos");
