@@ -1,7 +1,6 @@
 package com.codespace.tutorias.services;
 
 import com.codespace.tutorias.DTO.AsistenciaDTO;
-import com.codespace.tutorias.DTO.AsistenciaPublicaDTO;
 import com.codespace.tutorias.Mapping.AsistenciaMapping;
 import com.codespace.tutorias.models.Asistencia;
 import com.codespace.tutorias.repository.AsistenciaRepository;
@@ -13,38 +12,26 @@ import java.util.Optional;
 
 @Service
 public class AsistenciaService {
+
     @Autowired
     private AsistenciaRepository asistenciaRepository;
     @Autowired
     private AsistenciaMapping asistenciaMapping;
 
-    public List<AsistenciaPublicaDTO> listarAsistenciasPublicas() {
-        return asistenciaRepository.findAll()
-                .stream()
-                .map(asistenciaMapping::convertirAPublica)
+    public AsistenciaDTO registrarAsistencia(AsistenciaDTO dto){
+        Asistencia asistencia = asistenciaMapping.convertirAEntidad(dto);
+        return asistenciaMapping.convertirADTO(asistenciaRepository.save(asistencia));
+    }
+
+    public List<AsistenciaDTO> mostrarAsistencias(){
+        return asistenciaRepository.findAll().stream().map(asistenciaMapping::convertirADTO).toList();
+    }
+
+    public List<AsistenciaDTO> buscarPorIdTutoria(int idTutoria) {
+        return asistenciaRepository.findAll().stream()
+                .filter(a -> a.getTutoria().getIdTutoria() == idTutoria)
+                .map(asistenciaMapping::convertirADTO)
                 .toList();
     }
 
-    public Optional<AsistenciaPublicaDTO> buscarAsistenciaPublica(int id) {
-        return asistenciaRepository.findById(id)
-                .map(asistenciaMapping::convertirAPublica);
-    }
-
-    public Asistencia crearAsistencia(AsistenciaDTO dto) {
-        Asistencia entidad = asistenciaMapping.convertirAEntidad(dto);
-        return asistenciaRepository.save(entidad);
-    }
-
-    public Optional<Asistencia> actualizarAsistencia(int id, AsistenciaDTO dto) {
-        return asistenciaRepository.findById(id)
-                .map(existing -> {
-                    var entidad = asistenciaMapping.convertirAEntidad(dto);
-                    entidad.setIdAsistencia(id);
-                    return asistenciaRepository.save(entidad);
-                });
-    }
-
-    public void eliminarAsistencia(int id) {
-        asistenciaRepository.deleteById(id);
-    }
 }

@@ -1,36 +1,18 @@
-package com.codespace.tutorias.models;
-
-
-import jakarta.persistence.*;
+package com.codespace.tutorias.DTO;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-public class Tutoria {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TutoriasPublicasDTO {
     private int idTutoria;
-
-    @ManyToOne
-    @JoinColumn(name= "idHorario")
-    private Horario horario;
-
-    @ManyToMany
-    @JoinTable(
-            name = "tutorias_tutorados",
-            joinColumns = @JoinColumn(name = "id_tutoria"),
-            inverseJoinColumns = @JoinColumn(name = "matricula")
-    )
-    private List<Tutorado> tutorados = new ArrayList<>();
-
+    private HorariosPublicosDTO horario;
     private LocalDate fecha;
     private int edificio;
     private int aula;
+    private List<TutoradosPublicosDTO> tutorados;
     private String estado;
 
-    public Tutoria(){}
+    public TutoriasPublicasDTO(){}
 
     public int getIdTutoria() {
         return idTutoria;
@@ -40,20 +22,12 @@ public class Tutoria {
         this.idTutoria = idTutoria;
     }
 
-    public Horario getHorario() {
+    public HorariosPublicosDTO getHorario() {
         return horario;
     }
 
-    public void setHorario(Horario horario) {
+    public void setHorario(HorariosPublicosDTO horario) {
         this.horario = horario;
-    }
-
-    public List<Tutorado> getTutorados() {
-        return tutorados;
-    }
-
-    public void setTutorados(List<Tutorado> tutorados) {
-        this.tutorados = tutorados;
     }
 
     public LocalDate getFecha() {
@@ -78,6 +52,14 @@ public class Tutoria {
 
     public void setAula(int aula) {
         this.aula = aula;
+    }
+
+    public List<TutoradosPublicosDTO> getTutorados() {
+        return tutorados;
+    }
+
+    public void setTutorados(List<TutoradosPublicosDTO> tutorados) {
+        this.tutorados = tutorados;
     }
 
     public String getEstado() {

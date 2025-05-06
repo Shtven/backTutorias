@@ -1,29 +1,16 @@
-package com.codespace.tutorias.models;
-
-import jakarta.persistence.*;
+package com.codespace.tutorias.DTO;
 
 import java.time.LocalTime;
 
-@Entity
-public class Horario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class HorariosDTO {
     private int idHorario;
-
     private String dia;
     private LocalTime horaInicio;
     private LocalTime horaFin;
+    private TutorDTO tutor;
+    private MateriaDTO materia;
 
-    @ManyToOne
-    @JoinColumn(name= "matricula")
-    private Tutor tutor;
-
-    @ManyToOne
-    @JoinColumn(name= "nrc")
-    private Materia materia;
-
-    public Horario(){}
+    public HorariosDTO(){}
 
     public int getIdHorario() {
         return idHorario;
@@ -57,19 +44,21 @@ public class Horario {
         this.horaFin = horaFin;
     }
 
-    public Tutor getTutor() {
+    public TutorDTO getTutor() {
         return tutor;
     }
 
-    public void setTutor(Tutor tutor) {
+    public void setTutor(TutorDTO tutor) {
         this.tutor = tutor;
     }
 
-    public Materia getMateria() {
+    public MateriaDTO getMateria() {
         return materia;
     }
 
-    public void setMateria(Materia materia) {
+    public void setMateria(MateriaDTO materia) {
         this.materia = materia;
     }
 }
+
+

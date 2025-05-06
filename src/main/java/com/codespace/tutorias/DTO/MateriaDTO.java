@@ -1,16 +1,10 @@
-package com.codespace.tutorias.models;
+package com.codespace.tutorias.DTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
-@Entity
-public class Materia {
-    @Id
+public class MateriaDTO {
     private int nrc;
-
     private String nombreMateria;
 
-    public Materia(){}
+    public MateriaDTO(){}
 
     public int getNrc() {
         return nrc;

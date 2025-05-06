@@ -1,38 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.codespace.tutorias.models;
+package com.codespace.tutorias.DTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
-/**
- *
- * @author shtven
- */
-@Entity
-public class Tutores {
-    @Id
+public class TutorDTO {
     private String matricula;
-
     private String nombre;
     private String apellidoP;
     private String apellidoM;
     private String correo;
     private String password;
 
-    public Tutores(){ }
-
-    public Tutores(String matricula, String nombre, String apellidoP, String apellidoM, String correo, String password) {
-        this.matricula = matricula;
-        this.nombre = nombre;
-        this.apellidoP = apellidoP;
-        this.apellidoM = apellidoM;
-        this.correo = correo;
-        this.password = password;
-    }
-
+    public TutorDTO(){}
 
     public String getMatricula() {
         return matricula;
