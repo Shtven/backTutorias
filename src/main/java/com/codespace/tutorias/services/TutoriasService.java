@@ -33,4 +33,26 @@ public class TutoriasService {
     public Optional<TutoriasDTO> findTutoriaPrivada(int id){
         return tutoriasRepository.findById(id).map(tutoriaMapping::convertirADTO);
     }
+
+    public List<TutoriasPublicasDTO> findMisTutorias(String matricula) {
+        return tutoriasRepository.findTutoriasPorTutorado(matricula)
+                .stream()
+                .map(tutoriaMapping::convertirAPublicas)
+                .toList();
+    }
+
+    public List<TutoriasPublicasDTO> findTutoriasPorMatriculaTutor(String matricula) {
+        return tutoriasRepository.findTutoriasPorTutor(matricula)
+                .stream()
+                .map(tutoriaMapping::convertirAPublicas)
+                .toList();
+    }
+
+    public List<TutoriasPublicasDTO> findTutoriasPorNombreTutor(String nombre) {
+        return tutoriasRepository.findTutoriasPorNombreDeTutor(nombre)
+                .stream()
+                .map(tutoriaMapping::convertirAPublicas)
+                .toList();
+    }
+
 }
