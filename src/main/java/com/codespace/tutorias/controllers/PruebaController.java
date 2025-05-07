@@ -19,4 +19,9 @@ public class PruebaController {
     public String hola(){
         return "holiwis";
     }
+
+    @GetMapping("/willy")
+    public String willi(){
+        return "Willi agarra la pala";
+    }
 }
