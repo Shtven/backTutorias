@@ -39,6 +39,27 @@ public class TutoriasService {
         return tutoriasRepository.findById(id).map(tutoriaMapping::convertirADTO);
     }
 
+    public List<TutoriasPublicasDTO> findMisTutorias(String matricula) {
+        return tutoriasRepository.findTutoriasPorTutorado(matricula)
+                .stream()
+                .map(tutoriaMapping::convertirAPublicas)
+                .toList();
+    }
+
+    public List<TutoriasPublicasDTO> findTutoriasPorMatriculaTutor(String matricula) {
+        return tutoriasRepository.findTutoriasPorTutor(matricula)
+                .stream()
+                .map(tutoriaMapping::convertirAPublicas)
+                .toList();
+    }
+
+    public List<TutoriasPublicasDTO> findTutoriasPorNombreTutor(String nombre) {
+        return tutoriasRepository.findTutoriasPorNombreDeTutor(nombre)
+                .stream()
+                .map(tutoriaMapping::convertirAPublicas)
+                .toList();
+    }
+
     @Transactional
     public TutoriasDTO actualizarTutoria(int id, TutoriaUpdateDTO dto) {
         Tutoria entidad = tutoriasRepository.findById(id)
@@ -68,4 +89,5 @@ public class TutoriasService {
 
         tutoriasRepository.delete(entidad);
     }
+
 }
