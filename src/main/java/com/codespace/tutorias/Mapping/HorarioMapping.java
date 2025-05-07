@@ -32,7 +32,7 @@ public class HorarioMapping {
         tut.setPassword(entidad.getTutor().getPassword());
         dto.setTutor(tut);
 
-        var mat = new com.codespace.tutorias.DTO.MateriasDTO();
+        var mat = new com.codespace.tutorias.DTO.MateriaDTO();
         mat.setNrc(entidad.getMateria().getNrc());
         mat.setNombreMateria(entidad.getMateria().getNombreMateria());
         dto.setMateria(mat);
@@ -55,7 +55,7 @@ public class HorarioMapping {
         tutPub.setCorreo(entidad.getTutor().getCorreo());
         dto.setTutor(tutPub);
 
-        var mat = new com.codespace.tutorias.DTO.MateriasDTO();
+        var mat = new com.codespace.tutorias.DTO.MateriaDTO();
         mat.setNrc(entidad.getMateria().getNrc());
         mat.setNombreMateria(entidad.getMateria().getNombreMateria());
         dto.setMateria(mat);

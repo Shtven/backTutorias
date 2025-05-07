@@ -1,7 +1,7 @@
 package com.codespace.tutorias.controllers;
 
 import com.codespace.tutorias.DTO.MateriaPublicaDTO;
-import com.codespace.tutorias.DTO.MateriasDTO;
+import com.codespace.tutorias.DTO.MateriaDTO;
 import com.codespace.tutorias.services.MateriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +30,14 @@ public class MateriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> crearMateria(@Valid @RequestBody MateriasDTO dto) {
+    public ResponseEntity<Void> crearMateria(@Valid @RequestBody MateriaDTO dto) {
         var creada = materiaService.crearMateria(dto);
         URI ubicacion = URI.create(String.format("/materias/%d", creada.getNrc()));
         return ResponseEntity.created(ubicacion).build();
     }
 
     @PutMapping("/{nrc}")
-    public ResponseEntity<Void> actualizarMateria(@PathVariable int nrc, @Valid @RequestBody MateriasDTO dto) {
+    public ResponseEntity<Void> actualizarMateria(@PathVariable int nrc, @Valid @RequestBody MateriaDTO dto) {
         return materiaService.actualizarMateria(nrc, dto)
                 .map(m -> ResponseEntity.noContent().<Void>build())
                 .orElse(ResponseEntity.notFound().build());

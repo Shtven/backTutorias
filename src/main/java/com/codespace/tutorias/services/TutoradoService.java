@@ -1,10 +1,15 @@
 package com.codespace.tutorias.services;
 
+import com.codespace.tutorias.DTO.PasswordUpdateDTO;
 import com.codespace.tutorias.DTO.TutoradoDTO;
 import com.codespace.tutorias.DTO.TutoradosPublicosDTO;
 import com.codespace.tutorias.Mapping.TutoradoMapping;
+import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.Tutorado;
 import com.codespace.tutorias.repository.TutoradoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +49,16 @@ public class TutoradoService {
 
     public Optional<TutoradoDTO> buscarTutoradoPrivado(String id){
         return tutoradoRepository.findById(id).map(tutoradoMapping::convertirADTO);
+    }
+
+    public void cambiarContrasena(String matricula, PasswordUpdateDTO dto) {
+        Tutorado tutorado = tutoradoRepository.findById(matricula)
+            .orElseThrow(() -> new EntityNotFoundException("Tutorado no encontrado: " + matricula));
+
+        if (!tutorado.getPassword().equals(dto.getOldPassword())) {
+            throw new BusinessException("Contraseña actual incorrecta");
+        }
+        tutorado.setPassword(dto.getNewPassword());
+        tutoradoRepository.save(tutorado);
     }
 }
