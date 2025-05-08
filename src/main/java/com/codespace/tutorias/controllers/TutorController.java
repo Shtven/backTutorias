@@ -1,6 +1,5 @@
 package com.codespace.tutorias.controllers;
 
-import com.codespace.tutorias.DTO.PasswordUpdateDTO;
 import com.codespace.tutorias.DTO.TutorDTO;
 import com.codespace.tutorias.DTO.TutoresPublicosDTO;
 import com.codespace.tutorias.services.TutorService;
@@ -33,14 +32,6 @@ public class TutorController {
     @GetMapping("/{id}")
     public ResponseEntity<TutoresPublicosDTO> findTutor(@PathVariable String id){
         return tutorService.buscarTutorPublico(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-    
-    @PutMapping("/{matricula}/password")
-    public ResponseEntity<Void> cambiarContrasenaTutor(
-            @PathVariable String matricula,
-            @Valid @RequestBody PasswordUpdateDTO dto) {
-        tutorService.cambiarContrasena(matricula, dto);
-        return ResponseEntity.noContent().build();
     }
 
 }
