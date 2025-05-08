@@ -61,33 +61,31 @@ public class TutoriasService {
     }
 
     @Transactional
-    public TutoriasDTO actualizarTutoria(int id, TutoriaUpdateDTO dto) {
-        Tutoria entidad = tutoriasRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Tutoria no existe con ID: " + id));
-
+    public TutoriasDTO actualizarTutoria(int id, TutoriasDTO dto) {
+        Tutoria entidad = tutoriaMapping.convertirAEntidad(dto);
         boolean sinAlumnos = entidad.getTutorados().isEmpty();
-        if (!sinAlumnos && !dto.isEmergencia()) {
+        if (!sinAlumnos) {
             throw new BusinessException("No se puede modificar: hay alumnos inscritos");
         }
-
-        entidad.setFecha(dto.getFecha());
-        entidad.setEdificio(dto.getEdificio());
-        entidad.setAula(dto.getAula());
-        entidad.setEstado(dto.getEstado());
 
         return tutoriaMapping.convertirADTO(tutoriasRepository.save(entidad));
     }
 
     @Transactional
-    public void cancelarTutoria(int id, boolean emergencia) {
-        Tutoria entidad = tutoriasRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Tutoria no existe con ID: " + id));
+    public void cancelarTutoria(int id) {
+         tutoriasRepository.deleteById(id);
+    }
 
-        if (!entidad.getTutorados().isEmpty() && !emergencia) {
-            throw new BusinessException("No se puede cancelar: hay alumnos inscritos");
-        }
+    public List<TutoradosPublicosDTO> listarTutoradosInscritos(Integer idTutoria) {
+        return tutoriasRepository.findTutoradosByTutoria(idTutoria);
+    }
 
-        tutoriasRepository.delete(entidad);
+    public long obtenerTotalTutorias() {
+        return tutoriasRepository.countTotalTutorias();
+    }
+
+    public long obtenerTotalAlumnosInscritos() {
+        return tutoriasRepository.countTotalAlumnosInscritos();
     }
 
 }
