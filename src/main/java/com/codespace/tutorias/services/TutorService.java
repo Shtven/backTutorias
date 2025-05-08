@@ -1,6 +1,6 @@
 package com.codespace.tutorias.services;
 
-import com.codespace.tutorias.DTO.PasswordUpdateDTO;
+//import com.codespace.tutorias.DTO.PasswordUpdateDTO;
 import com.codespace.tutorias.DTO.TutorDTO;
 import com.codespace.tutorias.DTO.TutoresPublicosDTO;
 import com.codespace.tutorias.Mapping.TutorMapping;
@@ -53,7 +53,7 @@ public class TutorService {
         return tutorRepository.findById(id).map(tutorMapping::convertirADTO);
     }
 
-    public void cambiarContrasena(String matricula, PasswordUpdateDTO dto) {
+   /* public void cambiarContrasena(String matricula, PasswordUpdateDTO dto) {
         Tutor tutor = tutorRepository.findById(matricula)
             .orElseThrow(() -> new EntityNotFoundException("Tutor no encontrado: " + matricula));
 
@@ -62,5 +62,5 @@ public class TutorService {
         }
         tutor.setPassword(dto.getNewPassword());
         tutorRepository.save(tutor);
-    }
+    }*/
 }
