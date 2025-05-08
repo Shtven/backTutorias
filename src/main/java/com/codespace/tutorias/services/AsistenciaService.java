@@ -7,7 +7,10 @@ import com.codespace.tutorias.repository.AsistenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -33,5 +36,26 @@ public class AsistenciaService {
                 .map(asistenciaMapping::convertirADTO)
                 .toList();
     }
+    
+    public int obtenerTotalAsistencias() {
+        return Optional.ofNullable(asistenciaRepository.sumTotalAsistencias()).orElse(0);
+    }
+
+    public List<Map<String, Object>> obtenerEstadisticasPorTutoria() {
+        List<Object[]> resultados = asistenciaRepository.asistenciasPorTutorias     ();
+        List<Map<String, Object>> datos = new ArrayList<>();
+
+        for (Object[] fila : resultados) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("tutoriaId", fila[0]);
+            map.put("totalAsistidos", fila[1]);
+            map.put("totalRegistros", fila[2]);
+            datos.add(map);
+        }
+
+        return datos;
+    }
+
+
 
 }
