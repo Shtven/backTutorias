@@ -1,9 +1,7 @@
 package com.codespace.tutorias.services;
 
 import com.codespace.tutorias.DTO.MateriaDTO;
-import com.codespace.tutorias.DTO.MateriaPublicaDTO;
 import com.codespace.tutorias.Mapping.MateriaMapping;
-import com.codespace.tutorias.models.Materia;
 import com.codespace.tutorias.repository.MateriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,32 +17,11 @@ public class MateriaService {
     @Autowired
     private MateriaMapping materiaMapping;
 
-    public List<MateriaPublicaDTO> listarMateriasPublicas() {
+    public List<MateriaDTO> listarMateriasPublicas() {
         return materiaRepository.findAll()
                 .stream()
-                .map(materiaMapping::convertirAPublica)
+                .map(materiaMapping::convertirADTO)
                 .toList();
     }
 
-    public Optional<MateriaPublicaDTO> buscarMateriaPublica(int nrc) {
-        return materiaRepository.findById(nrc)
-                .map(materiaMapping::convertirAPublica);
-    }
-
-    public Materia crearMateria(MateriaDTO dto) {
-        Materia entidad = materiaMapping.convetirAEntidad(dto);
-        return materiaRepository.save(entidad);
-    }
-
-    public Optional<Materia> actualizarMateria(int nrc, MateriaDTO dto) {
-        return materiaRepository.findById(nrc)
-                .map(existing -> {
-                    existing.setNombreMateria(dto.getNombreMateria());
-                    return materiaRepository.save(existing);
-                });
-    }
-
-    public void eliminarMateria(int nrc) {
-        materiaRepository.deleteById(nrc);
-    }
 }
