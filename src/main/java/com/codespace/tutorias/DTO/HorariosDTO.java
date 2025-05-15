@@ -3,12 +3,12 @@ package com.codespace.tutorias.DTO;
 import java.time.LocalTime;
 
 public class HorariosDTO {
+
     private int idHorario;
     private String dia;
     private LocalTime horaInicio;
     private LocalTime horaFin;
     private TutorDTO tutor;
-    private MateriaDTO materia;
 
     public HorariosDTO(){}
 
@@ -52,13 +52,6 @@ public class HorariosDTO {
         this.tutor = tutor;
     }
 
-    public MateriaDTO getMateria() {
-        return materia;
-    }
-
-    public void setMateria(MateriaDTO materia) {
-        this.materia = materia;
-    }
 }
 
 
