@@ -1,15 +1,21 @@
 package com.codespace.tutorias.DTO;
 
+import com.codespace.tutorias.exceptions.HorarioValido;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalTime;
 
-public class HorariosPublicosDTO {
+@HorarioValido
+public class CrearHorarioDTO {
     private int idHorario;
-    private String dia;
+    @NotNull(message = "Tienes que insertar un dia para tu horario.")
+    private DiaSemana dia;
+    @NotNull(message = "Tienes que ingresar una hora de inicio para tu horario.")
     private LocalTime horaInicio;
+    @NotNull(message = "Tienes que ingresar un hora de finalización para tu horario.")
     private LocalTime horaFin;
-    private TutoresPublicosDTO tutor;
 
-    public HorariosPublicosDTO(){}
+    public CrearHorarioDTO(){}
 
     public int getIdHorario() {
         return idHorario;
@@ -19,11 +25,11 @@ public class HorariosPublicosDTO {
         this.idHorario = idHorario;
     }
 
-    public String getDia() {
+    public DiaSemana getDia() {
         return dia;
     }
 
-    public void setDia(String dia) {
+    public void setDia(DiaSemana dia) {
         this.dia = dia;
     }
 
@@ -42,13 +48,4 @@ public class HorariosPublicosDTO {
     public void setHoraFin(LocalTime horaFin) {
         this.horaFin = horaFin;
     }
-
-    public TutoresPublicosDTO getTutor() {
-        return tutor;
-    }
-
-    public void setTutor(TutoresPublicosDTO tutor) {
-        this.tutor = tutor;
-    }
-
 }

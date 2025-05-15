@@ -25,7 +25,7 @@ public class TutorController {
     }
 
     @PostMapping("/registro")
-    public TutorDTO registrarTutorado(@RequestBody TutorDTO dto){
+    public TutorDTO registrarTutorado(@Valid @RequestBody TutorDTO dto){
         return tutorService.crearTutores(dto);
     }
 

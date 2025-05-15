@@ -1,10 +1,13 @@
 package com.codespace.tutorias.Mapping;
 
 import com.codespace.tutorias.DTO.*;
+import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.Horario;
+import com.codespace.tutorias.models.Materia;
 import com.codespace.tutorias.models.Tutorado;
 import com.codespace.tutorias.models.Tutoria;
 import com.codespace.tutorias.repository.HorarioRepository;
+import com.codespace.tutorias.repository.MateriaRepository;
 import com.codespace.tutorias.repository.TutoradoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +21,8 @@ public class TutoriaMapping {
     private TutoradoRepository tutoradoRepository;
     @Autowired
     private HorarioRepository horarioRepository;
+    @Autowired
+    private MateriaRepository materiaRepository;
 
     public Tutoria convertirAEntidad(TutoriasDTO dto) {
         Tutoria entidad = new Tutoria();
@@ -39,6 +44,34 @@ public class TutoriaMapping {
             entidad.setTutorados(List.of());
         }
         entidad.setEstado(dto.getEstado());
+
+        if (dto.getMateria() == null) {
+            throw new BusinessException("Debe proporcionar una materia válida");
+        }else {
+            Materia materia = materiaRepository.findById(dto.getMateria().getNrc())
+                    .orElseThrow(() -> new BusinessException("Materia no encontrada con NRC: " + dto.getMateria().getNrc()));
+
+            entidad.setMateria(materia);
+        }
+
+        return entidad;
+    }
+
+    public Tutoria convertirANuevaEntidad(CrearTutoriaDTO dto){
+        Tutoria entidad = new Tutoria();
+
+        Horario horario = horarioRepository.findById(dto.getIdHorario())
+                .orElseThrow(() -> new BusinessException("Horario no existente."));
+        Materia materia = materiaRepository.findById(dto.getNrcMateria())
+                .orElseThrow(() -> new BusinessException("Materia no encontrada."));
+
+        entidad.setHorario(horario);
+        entidad.setTutorados(List.of());
+        entidad.setMateria(materia);
+        entidad.setFecha(dto.getFecha());
+        entidad.setEdificio(dto.getEdificio());
+        entidad.setAula(dto.getAula());
+        entidad.setEstado("ACTIVO");
 
         return entidad;
     }
@@ -63,12 +96,6 @@ public class TutoriaMapping {
 
         horariosDTO.setTutor(tutoresDTO);
 
-        MateriaDTO materiaDTO = new MateriaDTO();
-        materiaDTO.setNrc(entidad.getHorario().getMateria().getNrc());
-        materiaDTO.setNombreMateria(entidad.getHorario().getMateria().getNombreMateria());
-
-        horariosDTO.setMateria(materiaDTO);
-
         dto.setHorario(horariosDTO);
         dto.setFecha(entidad.getFecha());
         dto.setEdificio(entidad.getEdificio());
@@ -90,6 +117,11 @@ public class TutoriaMapping {
         dto.setTutorados(tutoradosDTO);
         dto.setEstado(entidad.getEstado());
 
+        MateriaDTO materiaDTO = new MateriaDTO();
+        materiaDTO.setNrc(entidad.getMateria().getNrc());
+        materiaDTO.setNombreMateria(entidad.getMateria().getNombreMateria());
+
+        dto.setMateria(materiaDTO);
         return dto;
     }
 
@@ -112,12 +144,6 @@ public class TutoriaMapping {
 
         horariosDTO.setTutor(tutoresDTO);
 
-        MateriaDTO materiaDTO = new MateriaDTO();
-        materiaDTO.setNrc(entidad.getHorario().getMateria().getNrc());
-        materiaDTO.setNombreMateria(entidad.getHorario().getMateria().getNombreMateria());
-
-        horariosDTO.setMateria(materiaDTO);
-
         dto.setHorario(horariosDTO);
         dto.setFecha(entidad.getFecha());
         dto.setEdificio(entidad.getEdificio());
@@ -136,6 +162,12 @@ public class TutoriaMapping {
 
         dto.setTutorados(tutoradosDTO);
         dto.setEstado(entidad.getEstado());
+
+        MateriaDTO materiaDTO = new MateriaDTO();
+        materiaDTO.setNrc(entidad.getMateria().getNrc());
+        materiaDTO.setNombreMateria(entidad.getMateria().getNombreMateria());
+
+        dto.setMateria(materiaDTO);
 
         return dto;
     }
