@@ -2,7 +2,9 @@ package com.codespace.tutorias.services;
 
 import com.codespace.tutorias.DTO.HorariosDTO;
 import com.codespace.tutorias.DTO.HorariosPublicosDTO;
+import com.codespace.tutorias.Helpers.ValidationHelper;
 import com.codespace.tutorias.Mapping.HorarioMapping;
+import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.Horario;
 import com.codespace.tutorias.repository.HorarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,8 @@ import java.util.Optional;
 
 @Service
 public class HorarioService {
-    @Autowired
-    private HorarioRepository horarioRepository;
-    @Autowired
-    private HorarioMapping horarioMapping;
+    @Autowired private HorarioRepository horarioRepository;
+    @Autowired private HorarioMapping horarioMapping;
 
     public List<HorariosPublicosDTO> listarHorariosPublicos() {
         return horarioRepository.findAll()
@@ -31,14 +31,28 @@ public class HorarioService {
     }
 
     public Horario crearHorario(HorariosDTO dto) {
+        ValidationHelper.requireNonEmpty(dto.getDia(), "dia");
+        ValidationHelper.requireNonNull(dto.getHoraInicio(), "horaInicio");
+        ValidationHelper.requireNonNull(dto.getHoraFin(), "horaFin");
+        if (!dto.getHoraFin().isAfter(dto.getHoraInicio())) {
+            throw new BusinessException("horaFin debe ser después de horaInicio.");
+        }
+
         Horario entidad = horarioMapping.convertirAEntidad(dto);
         return horarioRepository.save(entidad);
     }
 
     public Optional<Horario> actualizarHorario(int id, HorariosDTO dto) {
+        ValidationHelper.requireNonEmpty(dto.getDia(), "dia");
+        ValidationHelper.requireNonNull(dto.getHoraInicio(), "horaInicio");
+        ValidationHelper.requireNonNull(dto.getHoraFin(), "horaFin");
+        if (!dto.getHoraFin().isAfter(dto.getHoraInicio())) {
+            throw new BusinessException("horaFin debe ser después de horaInicio.");
+        }
+
         return horarioRepository.findById(id)
                 .map(existing -> {
-                    var entidad = horarioMapping.convertirAEntidad(dto);
+                    Horario entidad = horarioMapping.convertirAEntidad(dto);
                     entidad.setIdHorario(id);
                     return horarioRepository.save(entidad);
                 });
