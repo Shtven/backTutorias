@@ -1,14 +1,11 @@
 package com.codespace.tutorias.services;
 
 import com.codespace.tutorias.DTO.*;
+import com.codespace.tutorias.Helpers.DateHelper;
 import com.codespace.tutorias.Mapping.TutoriaMapping;
 import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.*;
 import com.codespace.tutorias.repository.TutoriasRepository;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +23,23 @@ public class TutoriasService {
         return tutoriasRepository.findAll().stream().map(tutoriaMapping::convertirAPublicas).toList();
     }
 
-    public TutoriasDTO generarTutoria(TutoriasDTO dto){
-        Tutoria tutoria = tutoriaMapping.convertirAEntidad(dto);
+    public TutoriasDTO generarTutoria(CrearTutoriaDTO dto){
+
+        Tutoria tutoria = tutoriaMapping.convertirANuevaEntidad(dto);
+        List<Tutoria> listaTutorias = findPorMatriculaTutor(tutoria.getHorario().getTutor().getMatricula());
+        for (Tutoria lista: listaTutorias){
+            Horario horario = lista.getHorario();
+
+            if (horario.getDia().equals(tutoria.getHorario().getDia())) {
+                if (DateHelper.haySolapamiento(
+                        tutoria.getHorario().getHoraInicio(),
+                        tutoria.getHorario().getHoraFin(),
+                        horario.getHoraInicio(),
+                        horario.getHoraFin())) {
+                    throw new BusinessException("Ya existe una tutoría en ese horario y día.");
+                }
+            }
+        }
         return tutoriaMapping.convertirADTO(tutoriasRepository.save(tutoria));
     }
 
@@ -37,13 +49,6 @@ public class TutoriasService {
 
     public Optional<TutoriasDTO> findTutoriaPrivada(int id){
         return tutoriasRepository.findById(id).map(tutoriaMapping::convertirADTO);
-    }
-
-    public List<TutoriasPublicasDTO> findMisTutorias(String matricula) {
-        return tutoriasRepository.findTutoriasPorTutorado(matricula)
-                .stream()
-                .map(tutoriaMapping::convertirAPublicas)
-                .toList();
     }
 
     public List<TutoriasPublicasDTO> findTutoriasPorMatriculaTutor(String matricula) {
@@ -60,32 +65,40 @@ public class TutoriasService {
                 .toList();
     }
 
-    @Transactional
-    public TutoriasDTO actualizarTutoria(int id, TutoriasDTO dto) {
-        Tutoria entidad = tutoriaMapping.convertirAEntidad(dto);
-        boolean sinAlumnos = entidad.getTutorados().isEmpty();
-        if (!sinAlumnos) {
-            throw new BusinessException("No se puede modificar: hay alumnos inscritos");
+    private List<Tutoria> findPorMatriculaTutor(String matricula) {
+        return tutoriasRepository.findTutoriasPorTutor(matricula);
+    }
+
+    public TutoriasDTO editarTutoria(TutoriasDTO dto){
+        Tutoria tutoria = tutoriaMapping.convertirAEntidad(dto);
+
+        Tutoria tuto = tutoriasRepository.findById(tutoria.getIdTutoria())
+                .orElseThrow(() -> new BusinessException("La tutoría no existe."));
+
+        if(DateHelper.faltaMenosDe15Minutos(tuto.getFecha(), tuto.getHorario().getHoraInicio())){
+            throw new BusinessException("Faltan solo 15 minútos para que inicie la tutoria, ya no ṕuedes modificarla");
         }
 
-        return tutoriaMapping.convertirADTO(tutoriasRepository.save(entidad));
+        if (!tuto.getTutorados().isEmpty()) {
+            throw new BusinessException("No puedes modificar la tutoría porque ya hay tutorados inscritos.");
+        }
+
+        return tutoriaMapping.convertirADTO(tutoriasRepository.save(tutoria));
     }
 
-    @Transactional
-    public void cancelarTutoria(int id) {
-         tutoriasRepository.deleteById(id);
-    }
+    public void eliminarTutoria(int idTutoria){
+        Tutoria tutoria =  tutoriasRepository.findById(idTutoria)
+                .orElseThrow(() -> new BusinessException("La tutoría no existe."));
 
-    public List<TutoradosPublicosDTO> listarTutoradosInscritos(Integer idTutoria) {
-        return tutoriasRepository.findTutoradosByTutoria(idTutoria);
-    }
+        if(DateHelper.faltaMenosDe15Minutos(tutoria.getFecha(), tutoria.getHorario().getHoraInicio())){
+            throw new BusinessException("Faltan solo 15 minútos para que inicie la tutoria, ya no ṕuedes eliminarla");
+        }
 
-    public long obtenerTotalTutorias() {
-        return tutoriasRepository.countTotalTutorias();
-    }
+        if (!tutoria.getTutorados().isEmpty()) {
+            throw new BusinessException("No puedes eliminar la tutoría porque ya hay tutorados inscritos.");
+        }
 
-    public long obtenerTotalAlumnosInscritos() {
-        return tutoriasRepository.countTotalAlumnosInscritos();
+        tutoriasRepository.deleteById(tutoria.getIdTutoria());
     }
 
 }

@@ -1,8 +1,13 @@
 package com.codespace.tutorias.controllers;
 
+import com.codespace.tutorias.DTO.CambioPasswordDTO;
 import com.codespace.tutorias.DTO.TutoradoDTO;
 import com.codespace.tutorias.DTO.TutoradosPublicosDTO;
+import com.codespace.tutorias.exceptions.ApiResponse;
 import com.codespace.tutorias.services.TutoradoService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +28,7 @@ public class TutoradoController {
     }
 
     @PostMapping("/registro")
-    public TutoradoDTO registrarTutorado(@RequestBody TutoradoDTO dto){
+    public TutoradoDTO registrarTutorado(@Valid @RequestBody TutoradoDTO dto){
         return tutoradoService.crearTutorados(dto);
     }
 
@@ -32,10 +37,42 @@ public class TutoradoController {
         return tutoradoService.buscarTutoradoPublico(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    
-    @DeleteMapping("/{matricula}/tutorias/{idTutoria}")
-    public ResponseEntity<Void> cancelarInscripcion(@PathVariable String matricula, @PathVariable int idTutoria) {
-        tutoradoService.cancelarInscripcionATutoria(matricula, idTutoria);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/mis-tutorias")
+    public ResponseEntity<?> misTutorias(HttpServletRequest request){
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if(!"tutorado".equals(rol)){
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Tutorias Disponibles",tutoradoService.findMisTutorias(matricula)));
+    }
+
+    @PostMapping("/inscribirse/{id}")
+    public ResponseEntity<?> inscribirATutoria(@PathVariable int idTutoria, HttpServletRequest request){
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if(!"tutorado".equals(rol)){
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        tutoradoService.inscribirATutoria(matricula, idTutoria);
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Te has inscrito", null));
+    }
+
+    @PostMapping("/cancelar/{id}")
+    public ResponseEntity<?> cancelarInscripcion(@PathVariable int idTutoria, HttpServletRequest request){
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if(!"tutorado".equals(rol)){
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        tutoradoService.cancelarInscripcion(matricula, idTutoria);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Has cancelado tu inscripción a esta tutoria.", null));
     }
 }

@@ -25,6 +25,10 @@ public class Tutoria {
     )
     private List<Tutorado> tutorados = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name= "nrc")
+    private Materia materia;
+
     private LocalDate fecha;
     private int edificio;
     private int aula;
@@ -86,5 +90,13 @@ public class Tutoria {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Materia getMateria() {
+        return materia;
+    }
+
+    public void setMateria(Materia materia) {
+        this.materia = materia;
     }
 }
