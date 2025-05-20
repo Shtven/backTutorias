@@ -7,15 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MateriaMapping {
 
-    public Materia convetirAEntidad(MateriaDTO dto){
-        Materia entidad = new Materia();
-
-        entidad.setNrc(dto.getNrc());
-        entidad.setNombreMateria(dto.getNombreMateria());
-
-        return entidad;
-    }
-
     public MateriaDTO convertirADTO(Materia entidad){
         MateriaDTO dto = new MateriaDTO();
 
@@ -24,4 +15,5 @@ public class MateriaMapping {
 
         return dto;
     }
+
 }

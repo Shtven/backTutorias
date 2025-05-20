@@ -19,10 +19,6 @@ public class Horario {
     @JoinColumn(name= "matricula")
     private Tutor tutor;
 
-    @ManyToOne
-    @JoinColumn(name= "nrc")
-    private Materia materia;
-
     public Horario(){}
 
     public int getIdHorario() {
@@ -65,11 +61,4 @@ public class Horario {
         this.tutor = tutor;
     }
 
-    public Materia getMateria() {
-        return materia;
-    }
-
-    public void setMateria(Materia materia) {
-        this.materia = materia;
-    }
 }

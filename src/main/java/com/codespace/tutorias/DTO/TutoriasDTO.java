@@ -11,6 +11,7 @@ public class TutoriasDTO {
     private int aula;
     private List<TutoradoDTO> tutorados;
     private String estado;
+    private MateriaDTO materia;
 
     public TutoriasDTO(){}
 
@@ -68,5 +69,13 @@ public class TutoriasDTO {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public MateriaDTO getMateria() {
+        return materia;
+    }
+
+    public void setMateria(MateriaDTO materia) {
+        this.materia = materia;
     }
 }

@@ -2,6 +2,7 @@ package com.codespace.tutorias.repository;
 
 import com.codespace.tutorias.DTO.TutoradosPublicosDTO;
 import com.codespace.tutorias.DTO.TutoriasPublicasDTO;
+import com.codespace.tutorias.models.Tutorado;
 import com.codespace.tutorias.models.Tutoria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,18 +27,5 @@ public interface TutoriasRepository extends JpaRepository<Tutoria, Integer> {
     @Query("SELECT COUNT(DISTINCT tut) FROM Tutoria t JOIN t.tutorados tut")
     long countTotalAlumnosInscritos();
 
-    @Query("""
-        SELECT new com.codespace.tutorias.DTO.TutoradosPublicosDTO(
-            tutado.matricula,
-            tutado.nombre,
-            tutado.apellidoP,
-            tutado.apellidoM,
-            tutado.correo
-        )
-        FROM Tutoria t
-        JOIN t.tutorados tutado
-        WHERE t.idTutoria = :idTutoria
-        """)
-    List<TutoradosPublicosDTO> findTutoradosByTutoria(@Param("idTutoria") Integer idTutoria);
 
 }
