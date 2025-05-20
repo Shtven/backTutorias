@@ -89,8 +89,6 @@ public class TutoriaMapping {
         TutorDTO tutoresDTO = new TutorDTO();
         tutoresDTO.setMatricula(entidad.getHorario().getTutor().getMatricula());
         tutoresDTO.setNombre(entidad.getHorario().getTutor().getNombre());
-        tutoresDTO.setApellidoP(entidad.getHorario().getTutor().getApellidoP());
-        tutoresDTO.setApellidoM(entidad.getHorario().getTutor().getApellidoM());
         tutoresDTO.setCorreo(entidad.getHorario().getTutor().getCorreo());
         tutoresDTO.setPassword(entidad.getHorario().getTutor().getPassword());
 
@@ -106,8 +104,6 @@ public class TutoriaMapping {
                     TutoradoDTO dtoT = new TutoradoDTO();
                     dtoT.setMatricula(t.getMatricula());
                     dtoT.setNombre(t.getNombre());
-                    dtoT.setApellidoP(t.getApellidoP());
-                    dtoT.setApellidoM(t.getApellidoM());
                     dtoT.setCorreo(t.getCorreo());
                     dtoT.setPassword(t.getPassword());
                     return dtoT;
@@ -138,8 +134,6 @@ public class TutoriaMapping {
         TutoresPublicosDTO tutoresDTO = new TutoresPublicosDTO();
         tutoresDTO.setMatricula(entidad.getHorario().getTutor().getMatricula());
         tutoresDTO.setNombre(entidad.getHorario().getTutor().getNombre());
-        tutoresDTO.setApellidoP(entidad.getHorario().getTutor().getApellidoP());
-        tutoresDTO.setApellidoM(entidad.getHorario().getTutor().getApellidoM());
         tutoresDTO.setCorreo(entidad.getHorario().getTutor().getCorreo());
 
         horariosDTO.setTutor(tutoresDTO);
@@ -154,8 +148,6 @@ public class TutoriaMapping {
                     TutoradosPublicosDTO dtoT = new TutoradosPublicosDTO();
                     dtoT.setMatricula(t.getMatricula());
                     dtoT.setNombre(t.getNombre());
-                    dtoT.setApellidoP(t.getApellidoP());
-                    dtoT.setApellidoM(t.getApellidoM());
                     dtoT.setCorreo(t.getCorreo());
                     return dtoT;
                 }).toList();

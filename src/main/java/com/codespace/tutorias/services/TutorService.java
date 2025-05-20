@@ -1,6 +1,6 @@
 package com.codespace.tutorias.services;
 
-import com.codespace.tutorias.DTO.PasswordUpdateDTO;
+import com.codespace.tutorias.DTO.CambioPasswordDTO;
 import com.codespace.tutorias.DTO.TutorDTO;
 import com.codespace.tutorias.DTO.TutoresPublicosDTO;
 import com.codespace.tutorias.Mapping.TutorMapping;

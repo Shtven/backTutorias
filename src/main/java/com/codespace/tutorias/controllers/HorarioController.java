@@ -1,8 +1,11 @@
 package com.codespace.tutorias.controllers;
 
+import com.codespace.tutorias.DTO.CrearHorarioDTO;
 import com.codespace.tutorias.DTO.HorariosPublicosDTO;
 import com.codespace.tutorias.DTO.HorariosDTO;
+import com.codespace.tutorias.exceptions.ApiResponse;
 import com.codespace.tutorias.services.HorarioService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,11 +32,16 @@ public class HorarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<Void> crearHorario(@Valid @RequestBody HorariosDTO dto) {
-        var creado = horarioService.crearHorario(dto);
-        URI ubicacion = URI.create(String.format("/horarios/%d", creado.getIdHorario()));
-        return ResponseEntity.created(ubicacion).build();
+    @PostMapping("/crear-horario")
+    public ResponseEntity<?> crearHorario(@Valid @RequestBody CrearHorarioDTO dto, HttpServletRequest request) {
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if(!"tutor".equals(rol)){
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Horario creado correctamente", horarioService.crearHorario(dto, matricula)));
     }
 
     @PutMapping("/{id}")
@@ -48,4 +56,6 @@ public class HorarioController {
         horarioService.eliminarHorario(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }
