@@ -14,5 +14,12 @@ public class DateHelper {
         LocalDateTime inicioTutoria = LocalDateTime.of(fecha, horaInicio);
         return Duration.between(now, inicioTutoria).toMinutes() < 15;
     }
+
+    public static boolean yaComenzo(LocalDate fecha, LocalTime horaInicio){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime inicioTutoria = LocalDateTime.of(fecha, horaInicio);
+
+        return now.isAfter(inicioTutoria);
+    }
 }
 

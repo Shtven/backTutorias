@@ -11,8 +11,6 @@ public class TutoradoMapping {
         TutoradosPublicosDTO dto = new TutoradosPublicosDTO();
         dto.setMatricula(entidad.getMatricula());
         dto.setNombre(entidad.getNombre());
-        dto.setApellidoP(entidad.getApellidoP());
-        dto.setApellidoM(entidad.getApellidoM());
         dto.setCorreo(entidad.getCorreo());
         return dto;
     }
@@ -21,8 +19,6 @@ public class TutoradoMapping {
         TutoradoDTO dto = new TutoradoDTO();
         dto.setMatricula(entidad.getMatricula());
         dto.setNombre(entidad.getNombre());
-        dto.setApellidoP(entidad.getApellidoP());
-        dto.setApellidoM(entidad.getApellidoM());
         dto.setCorreo(entidad.getCorreo());
         dto.setPassword(entidad.getPassword());
         return dto;
@@ -32,8 +28,6 @@ public class TutoradoMapping {
         Tutorado entidad = new Tutorado();
         entidad.setMatricula(dto.getMatricula());
         entidad.setNombre(dto.getNombre());
-        entidad.setApellidoP(dto.getApellidoP());
-        entidad.setApellidoM(dto.getApellidoM());
         entidad.setCorreo(dto.getCorreo());
         entidad.setPassword(dto.getPassword());
         return entidad;

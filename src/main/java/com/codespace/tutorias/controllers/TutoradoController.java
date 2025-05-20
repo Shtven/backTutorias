@@ -1,6 +1,6 @@
 package com.codespace.tutorias.controllers;
 
-import com.codespace.tutorias.DTO.PasswordUpdateDTO;
+import com.codespace.tutorias.DTO.CambioPasswordDTO;
 import com.codespace.tutorias.DTO.TutoradoDTO;
 import com.codespace.tutorias.DTO.TutoradosPublicosDTO;
 import com.codespace.tutorias.exceptions.ApiResponse;
@@ -49,4 +49,30 @@ public class TutoradoController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Tutorias Disponibles",tutoradoService.findMisTutorias(matricula)));
     }
 
+    @PostMapping("/inscribirse/{id}")
+    public ResponseEntity<?> inscribirATutoria(@PathVariable int idTutoria, HttpServletRequest request){
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if(!"tutorado".equals(rol)){
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        tutoradoService.inscribirATutoria(matricula, idTutoria);
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Te has inscrito", null));
+    }
+
+    @PostMapping("/cancelar/{id}")
+    public ResponseEntity<?> cancelarInscripcion(@PathVariable int idTutoria, HttpServletRequest request){
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if(!"tutorado".equals(rol)){
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        tutoradoService.cancelarInscripcion(matricula, idTutoria);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Has cancelado tu inscripción a esta tutoria.", null));
+    }
 }

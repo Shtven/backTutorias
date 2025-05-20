@@ -13,14 +13,6 @@ public class TutorDTO {
     @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\\s]+$",
             message = "Debes ingresar un nombre valido")
     private String nombre;
-    @NotBlank(message = "Debes ingresar tu apellido paterno.")
-    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\\s]+$",
-            message = "Debes ingresar un apellido paterno valido")
-    private String apellidoP;
-    @NotBlank(message = "Debes ingresar tu apellido materno.")
-    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\\s]+$",
-            message = "Debes ingresar un apellido materno valido")
-    private String apellidoM;
     @NotBlank(message = "Debes ingresar un correo.")
     @Email(message = "Debes ingresar un correo valido.")
     private String correo;
@@ -45,22 +37,6 @@ public class TutorDTO {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getApellidoP() {
-        return apellidoP;
-    }
-
-    public void setApellidoP(String apellidoP) {
-        this.apellidoP = apellidoP;
-    }
-
-    public String getApellidoM() {
-        return apellidoM;
-    }
-
-    public void setApellidoM(String apellidoM) {
-        this.apellidoM = apellidoM;
     }
 
     public String getCorreo() {
