@@ -3,7 +3,6 @@ package com.codespace.tutorias.services;
 import com.codespace.tutorias.DTO.MateriaDTO;
 import com.codespace.tutorias.Helpers.ValidationHelper;
 import com.codespace.tutorias.Mapping.MateriaMapping;
-import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.Materia;
 import com.codespace.tutorias.repository.MateriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
