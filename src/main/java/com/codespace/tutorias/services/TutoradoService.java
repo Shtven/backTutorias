@@ -8,11 +8,10 @@ import com.codespace.tutorias.Helpers.DateHelper;
 import com.codespace.tutorias.Mapping.TutoradoMapping;
 import com.codespace.tutorias.Mapping.TutoriaMapping;
 import com.codespace.tutorias.exceptions.BusinessException;
-import com.codespace.tutorias.models.Horario;
-import com.codespace.tutorias.models.Tutorado;
-import com.codespace.tutorias.models.Tutoria;
+import com.codespace.tutorias.models.*;
 import com.codespace.tutorias.repository.TutoradoRepository;
 
+import com.codespace.tutorias.repository.TutoriaTutoradoRepository;
 import com.codespace.tutorias.repository.TutoriasRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,8 @@ public class TutoradoService {
     private TutoriaMapping tutoriaMapping;
     @Autowired
     private TutoriasRepository tutoriasRepository;
+    @Autowired
+    private TutoriaTutoradoRepository tutoriaTutoradoRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -66,8 +67,8 @@ public class TutoradoService {
     }
 
     public List<TutoriasPublicasDTO> findMisTutorias(String matricula) {
-        return tutoriasRepository.findTutoriasPorTutorado(matricula)
-                .stream()
+        return tutoriaTutoradoRepository.findByTutoradoMatricula(matricula).stream()
+                .map(TutoriaTutorado::getTutoria)
                 .map(tutoriaMapping::convertirAPublicas)
                 .toList();
     }
@@ -83,17 +84,21 @@ public class TutoradoService {
             throw new BusinessException("La tutoria ya ha comenzado, ya no puedes inscribirte.");
         }
 
-        List<Tutorado> listaInscritos = tutoria.getTutorados();
-
-        if(listaInscritos.contains(tutorado)){
-            throw new BusinessException("Ya estás inscrito a esta tutoria");
+        TutoriaTutoradoId id = new TutoriaTutoradoId(idTutoria, matricula);
+        if (tutoriaTutoradoRepository.existsById(id)) {
+            throw new BusinessException("Ya estás inscrito a esta tutoría.");
         }
 
-        if(listaInscritos.size() > 4){
-            throw new BusinessException("La tutoria está llena.");
+        long inscritos = tutoriaTutoradoRepository.countByTutoriaIdTutoria(idTutoria);
+        if (inscritos >= 5) {
+            throw new BusinessException("La tutoría está llena.");
         }
 
-        List<Tutoria> tutoriasInscritas = tutoriasRepository.findTutoriasPorTutorado(matricula);
+        List<Tutoria> tutoriasInscritas = tutoriaTutoradoRepository.findByTutoradoMatricula(matricula)
+                .stream()
+                .map(TutoriaTutorado::getTutoria)
+                .toList();
+
         for (Tutoria t : tutoriasInscritas) {
             Horario h = t.getHorario();
             if (h.getDia().equals(tutoria.getHorario().getDia()) &&
@@ -104,32 +109,27 @@ public class TutoradoService {
             }
         }
 
-        listaInscritos.add(tutorado);
-        tutoria.setTutorados(listaInscritos);
-
-        tutoriasRepository.save(tutoria);
+        TutoriaTutorado relacion = new TutoriaTutorado(tutoria, tutorado);
+        tutoriaTutoradoRepository.save(relacion);
     }
 
-    public void cancelarInscripcion(String matricula, int idHorario){
-        Tutoria tutoria = tutoriasRepository.findById(idHorario)
-                .orElseThrow(() -> new BusinessException("La tutoria no existe."));
+    public void cancelarInscripcion(String matricula, int idTutoria){
+        Tutoria tutoria = tutoriasRepository.findById(idTutoria)
+                .orElseThrow(() -> new BusinessException("La tutoría no existe."));
         Tutorado tutorado = tutoradoRepository.findById(matricula)
                 .orElseThrow(() -> new BusinessException("El tutorado no existe."));
 
-        if(DateHelper.faltaMenosDe15Minutos(tutoria.getFecha(), tutoria.getHorario().getHoraInicio())){
-            throw new BusinessException("Faltan 15 mminutos o menos para que comience la tutoria, ya no puedes cancelar tu inscripción.");
+        if (DateHelper.faltaMenosDe15Minutos(tutoria.getFecha(), tutoria.getHorario().getHoraInicio())) {
+            throw new BusinessException("Faltan 15 minutos o menos para que comience la tutoría, ya no puedes cancelar tu inscripción.");
         }
 
-        List<Tutorado> listaInscritos = tutoria.getTutorados();
-
-        boolean removed = listaInscritos.removeIf(t -> t.getMatricula().equals(matricula));
-
-        if (!removed) {
+        TutoriaTutoradoId id = new TutoriaTutoradoId(idTutoria, matricula);
+        if (!tutoriaTutoradoRepository.existsById(id)) {
             throw new BusinessException("No estás inscrito en esta tutoría.");
         }
 
-        tutoria.setTutorados(listaInscritos);
-        tutoriasRepository.save(tutoria);
+        tutoriaTutoradoRepository.deleteById(id);
     }
+
 
 }
