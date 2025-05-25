@@ -7,6 +7,7 @@ import com.codespace.tutorias.Mapping.TutoriaMapping;
 import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.*;
 import com.codespace.tutorias.repository.TutoradoRepository;
+import com.codespace.tutorias.repository.TutoriaTutoradoRepository;
 import com.codespace.tutorias.repository.TutoriasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class TutoriasService {
     private TutoriaMapping tutoriaMapping;
     @Autowired
     private TutoradoRepository tutoradoRepository;
+    @Autowired
+    private TutoriaTutoradoRepository tutoriaTutoradoRepository;
     @Autowired
     private TutoradoMapping tutoradoMapping;
 
@@ -85,7 +88,7 @@ public class TutoriasService {
             throw new BusinessException("Faltan solo 15 minútos para que inicie la tutoria, ya no ṕuedes modificarla");
         }
 
-        if (!tuto.getTutorados().isEmpty()) {
+        if (!tuto.getTutoriasTutorados().isEmpty()) {
             throw new BusinessException("No puedes modificar la tutoría porque ya hay tutorados inscritos.");
         }
 
@@ -100,7 +103,7 @@ public class TutoriasService {
             throw new BusinessException("Faltan solo 15 minútos para que inicie la tutoria, ya no ṕuedes eliminarla");
         }
 
-        if (!tutoria.getTutorados().isEmpty()) {
+        if (!tutoria.getTutoriasTutorados().isEmpty()) {
             throw new BusinessException("No puedes eliminar la tutoría porque ya hay tutorados inscritos.");
         }
 
@@ -117,13 +120,14 @@ public class TutoriasService {
     }
 
     public List<TutoradosPublicosDTO> mostrarTutoradosInscritos(int idTutoria){
-        Tutoria tutoria = tutoriasRepository.findById(idTutoria)
-                .orElseThrow(() -> new BusinessException("La tutoría no existe."));
+        if (!tutoriasRepository.existsById(idTutoria)) {
+            throw new BusinessException("La tutoría no existe.");
+        }
 
-        List<Tutorado> tutorados = tutoria.getTutorados();
-
-        return tutoradoRepository.findAll().stream()
-                .map(tutoradoMapping::convertirAFront).toList();
+        return tutoriaTutoradoRepository.findByTutoriaIdTutoria(idTutoria).stream()
+                .map(TutoriaTutorado::getTutorado)
+                .map(tutoradoMapping::convertirAFront)
+                .toList();
     }
 
 }

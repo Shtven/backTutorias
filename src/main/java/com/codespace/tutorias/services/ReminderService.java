@@ -2,6 +2,7 @@ package com.codespace.tutorias.services;
 import com.codespace.tutorias.Helpers.EmailHelper;
 import com.codespace.tutorias.models.Tutorado;
 import com.codespace.tutorias.models.Tutoria;
+import com.codespace.tutorias.models.TutoriaTutorado;
 import com.codespace.tutorias.repository.TutoriasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,8 +32,8 @@ public class ReminderService {
                 LocalTime inicio = tutoria.getHorario().getHoraInicio();
                 long minutosRestantes = java.time.Duration.between(ahora, inicio).toMinutes();
 
-                if (minutosRestantes == 15) {
-                    for (Tutorado t : tutoria.getTutorados()) {
+                if (minutosRestantes == 15 && ahora.isBefore(inicio) && !"NOTIFICADA".equalsIgnoreCase(tutoria.getEstado())) {
+                    for (TutoriaTutorado t : tutoria.getTutoriasTutorados()) {
                         String cuerpo = String.format("""
     <html>
     <body>
@@ -46,14 +47,51 @@ public class ReminderService {
     </body>
     </html>
     """,
-                                t.getNombre(),
+                                t.getTutorado().getNombre(),
                                 tutoria.getMateria().getNombreMateria(),
                                 tutoria.getHorario().getHoraInicio(),
                                 tutoria.getEdificio(),
                                 tutoria.getAula()
                         );
 
+                        emailHelper.enviarCorreo(
+                                t.getTutorado().getCorreo(),
+                                "Recordatorio de tutoría próxima",
+                                cuerpo
+                        );
+
+
                     }
+
+                    tutoria.setEstado("NOTIFICADA");
+                    tutoriasRepository.save(tutoria);
+
+                    String cuerpoTutor = String.format("""
+<html>
+<body>
+    <h2 style='color: #2196F3;'>¡Hola %s!</h2>
+    <p>Este es un recordatorio para tu <strong>tutoría</strong> próxima a iniciar.</p>
+    <p><b>Materia:</b> %s</p>
+    <p><b>Horario:</b> %s</p>
+    <p><b>Edificio:</b> %s | <b>Aula:</b> %s</p>
+    <hr>
+    <p style='color: gray; font-size: 12px;'>Mensaje automático del sistema de tutorías.</p>
+</body>
+</html>
+""",
+                            tutoria.getHorario().getTutor().getNombre(),
+                            tutoria.getMateria().getNombreMateria(),
+                            tutoria.getHorario().getHoraInicio(),
+                            tutoria.getEdificio(),
+                            tutoria.getAula()
+                    );
+
+                    emailHelper.enviarCorreo(
+                            tutoria.getHorario().getTutor().getCorreo(),
+                            "Recordatorio: tu tutoría comienza en 15 minutos",
+                            cuerpoTutor
+                    );
+
                 }
             }
         }
