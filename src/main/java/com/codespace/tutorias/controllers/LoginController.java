@@ -8,6 +8,7 @@ import com.codespace.tutorias.services.TutorService;
 import com.codespace.tutorias.services.TutoradoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,8 @@ public class LoginController {
     private TutoradoService tutoradoService;
     @Autowired
     private JWTUtil jwtUtil;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> iniciarSesion(@RequestBody LoginDTO dto){
@@ -33,13 +36,13 @@ public class LoginController {
         String password = dto.getPassword();
 
         Optional<TutorDTO> tutor = tutorService.buscarTutorPrivado(matricula);
-        if(tutor.isPresent() && tutor.get().getPassword().equals(password)){
+        if (tutor.isPresent() && passwordEncoder.matches(password, tutor.get().getPassword())){
             String token = jwtUtil.generateToken(matricula, "tutor");
             return ResponseEntity.ok(Map.of("token", token, "rol", "tutor"));
         }
 
         Optional<TutoradoDTO> tutorado = tutoradoService.buscarTutoradoPrivado(matricula);
-        if(tutorado.isPresent() && tutorado.get().getPassword().equals(password)){
+        if (tutorado.isPresent() && passwordEncoder.matches(password, tutorado.get().getPassword())){
             String token = jwtUtil.generateToken(matricula, "tutorado");
             return ResponseEntity.ok(Map.of("token", token, "rol", "tutorado"));
         }
