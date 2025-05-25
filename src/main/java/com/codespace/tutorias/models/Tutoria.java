@@ -17,13 +17,9 @@ public class Tutoria {
     @JoinColumn(name= "idHorario")
     private Horario horario;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tutorias_tutorados",
-            joinColumns = @JoinColumn(name = "id_tutoria"),
-            inverseJoinColumns = @JoinColumn(name = "matricula")
-    )
-    private List<Tutorado> tutorados = new ArrayList<>();
+    @OneToMany(mappedBy = "tutoria")
+    private List<TutoriaTutorado> tutoriasTutorados = new ArrayList<>();
+
 
     @ManyToOne
     @JoinColumn(name= "nrc")
@@ -52,12 +48,12 @@ public class Tutoria {
         this.horario = horario;
     }
 
-    public List<Tutorado> getTutorados() {
-        return tutorados;
+    public List<TutoriaTutorado> getTutoriasTutorados() {
+        return tutoriasTutorados;
     }
 
-    public void setTutorados(List<Tutorado> tutorados) {
-        this.tutorados = tutorados;
+    public void setTutoriasTutorados(List<TutoriaTutorado> tutoriasTutorados) {
+        this.tutoriasTutorados = tutoriasTutorados;
     }
 
     public LocalDate getFecha() {
