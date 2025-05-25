@@ -11,6 +11,7 @@ import com.codespace.tutorias.repository.TutorRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class TutorService {
     private TutorRepository tutorRepository;
     @Autowired
     private TutorMapping tutorMapping;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<TutoresPublicosDTO> mostrarTutoresPublicos(){
         return tutorRepository.findAll()
@@ -38,6 +41,7 @@ public class TutorService {
 
     public TutorDTO crearTutores(TutorDTO dto) {
         Tutor tutor = tutorMapping.convertirAEntidad(dto);
+        tutor.setPassword(passwordEncoder.encode(tutor.getPassword()));
         return tutorMapping.convertirADTO(tutorRepository.save(tutor));
     }
 

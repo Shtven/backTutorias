@@ -2,9 +2,11 @@ package com.codespace.tutorias.services;
 
 import com.codespace.tutorias.DTO.*;
 import com.codespace.tutorias.Helpers.DateHelper;
+import com.codespace.tutorias.Mapping.TutoradoMapping;
 import com.codespace.tutorias.Mapping.TutoriaMapping;
 import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.*;
+import com.codespace.tutorias.repository.TutoradoRepository;
 import com.codespace.tutorias.repository.TutoriasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,10 @@ public class TutoriasService {
     private TutoriasRepository tutoriasRepository;
     @Autowired
     private TutoriaMapping tutoriaMapping;
+    @Autowired
+    private TutoradoRepository tutoradoRepository;
+    @Autowired
+    private TutoradoMapping tutoradoMapping;
 
     public List<TutoriasPublicasDTO> mostrarTutorias(){
         return tutoriasRepository.findAll().stream().map(tutoriaMapping::convertirAPublicas).toList();
@@ -99,6 +105,25 @@ public class TutoriasService {
         }
 
         tutoriasRepository.deleteById(tutoria.getIdTutoria());
+    }
+
+    public void tutoriaCompletada(int idTutoria){
+        Tutoria tutoria =  tutoriasRepository.findById(idTutoria)
+                .orElseThrow(() -> new BusinessException("La tutoría no existe."));
+
+        tutoria.setEstado("COMPLETADO");
+
+        tutoriasRepository.save(tutoria);
+    }
+
+    public List<TutoradosPublicosDTO> mostrarTutoradosInscritos(int idTutoria){
+        Tutoria tutoria = tutoriasRepository.findById(idTutoria)
+                .orElseThrow(() -> new BusinessException("La tutoría no existe."));
+
+        List<Tutorado> tutorados = tutoria.getTutorados();
+
+        return tutoradoRepository.findAll().stream()
+                .map(tutoradoMapping::convertirAFront).toList();
     }
 
 }

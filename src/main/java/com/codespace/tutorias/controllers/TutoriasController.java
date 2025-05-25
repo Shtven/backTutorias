@@ -76,8 +76,8 @@ public class TutoriasController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Tutoria editada correctamente ",tutoriasService.editarTutoria(dto)));
      }
 
-    @DeleteMapping("/eliminar")
-    public ResponseEntity<?> eliminarTutoria(@RequestParam int idTutoria, HttpServletRequest request){
+    @DeleteMapping("/eliminar/{idTutoria}")
+    public ResponseEntity<?> eliminarTutoria(@PathVariable int idTutoria, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
         if(!"tutor".equals(rol)){
@@ -89,4 +89,28 @@ public class TutoriasController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Tutoria eliminada correctamente ", null));
     }
 
+    @PutMapping("/completa/{idTutoria}")
+    public ResponseEntity<?> tutoriaCompletada(@PathVariable int idTutoria, HttpServletRequest request) {
+        String rol = (String) request.getAttribute("rol");
+
+        if(!"tutor".equals(rol)){
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        tutoriasService.tutoriaCompletada(idTutoria);
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Tutoria completa", null));
+
+    }
+
+    @GetMapping("/inscritos/{idTutoria}")
+    public ResponseEntity<?> verInscritos(@PathVariable int idTutoria, HttpServletRequest request) {
+        String rol = (String) request.getAttribute("rol");
+
+        if (!"tutor".equals(rol)) {
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Tutorado inscritos:", tutoriasService.mostrarTutoradosInscritos(idTutoria)));
+    }
 }

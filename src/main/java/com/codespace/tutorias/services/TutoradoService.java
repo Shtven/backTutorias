@@ -14,9 +14,9 @@ import com.codespace.tutorias.models.Tutoria;
 import com.codespace.tutorias.repository.TutoradoRepository;
 
 import com.codespace.tutorias.repository.TutoriasRepository;
-import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +33,9 @@ public class TutoradoService {
     private TutoriaMapping tutoriaMapping;
     @Autowired
     private TutoriasRepository tutoriasRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     public List<TutoradoDTO> listarTutoradosPrivados() {
         return tutoradoRepository.findAll().stream()
@@ -46,6 +49,7 @@ public class TutoradoService {
 
     public TutoradoDTO crearTutorados(TutoradoDTO dto) {
         Tutorado tutorado = tutoradoMapping.convertirAEntidad(dto);
+        tutorado.setPassword(passwordEncoder.encode(tutorado.getPassword()));
         return tutoradoMapping.convertirADTO(tutoradoRepository.save(tutorado));
     }
 
