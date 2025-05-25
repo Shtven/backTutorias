@@ -2,10 +2,7 @@ package com.codespace.tutorias.Mapping;
 
 import com.codespace.tutorias.DTO.*;
 import com.codespace.tutorias.exceptions.BusinessException;
-import com.codespace.tutorias.models.Horario;
-import com.codespace.tutorias.models.Materia;
-import com.codespace.tutorias.models.Tutorado;
-import com.codespace.tutorias.models.Tutoria;
+import com.codespace.tutorias.models.*;
 import com.codespace.tutorias.repository.HorarioRepository;
 import com.codespace.tutorias.repository.MateriaRepository;
 import com.codespace.tutorias.repository.TutoradoRepository;
@@ -35,14 +32,9 @@ public class TutoriaMapping {
         entidad.setEdificio(dto.getEdificio());
         entidad.setAula(dto.getAula());
 
-        if (dto.getTutorados() != null && !dto.getTutorados().isEmpty()) {
-            List<Tutorado> listaTutorados = dto.getTutorados().stream()
-                    .map(t -> tutoradoRepository.findById(t.getMatricula()).orElseThrow())
-                    .toList();
-            entidad.setTutorados(listaTutorados);
-        } else {
-            entidad.setTutorados(List.of());
-        }
+
+        entidad.setTutoriasTutorados(List.of());
+
         entidad.setEstado(dto.getEstado());
 
         if (dto.getMateria() == null) {
@@ -66,7 +58,7 @@ public class TutoriaMapping {
                 .orElseThrow(() -> new BusinessException("Materia no encontrada."));
 
         entidad.setHorario(horario);
-        entidad.setTutorados(List.of());
+        entidad.setTutoriasTutorados(List.of());
         entidad.setMateria(materia);
         entidad.setFecha(dto.getFecha());
         entidad.setEdificio(dto.getEdificio());
@@ -99,13 +91,13 @@ public class TutoriaMapping {
         dto.setEdificio(entidad.getEdificio());
         dto.setAula(entidad.getAula());
 
-        List<TutoradoDTO> tutoradosDTO = entidad.getTutorados().stream()
+        List<TutoradoDTO> tutoradosDTO = entidad.getTutoriasTutorados().stream()
                 .map(t -> {
                     TutoradoDTO dtoT = new TutoradoDTO();
-                    dtoT.setMatricula(t.getMatricula());
-                    dtoT.setNombre(t.getNombre());
-                    dtoT.setCorreo(t.getCorreo());
-                    dtoT.setPassword(t.getPassword());
+                    dtoT.setMatricula(t.getTutorado().getMatricula());
+                    dtoT.setNombre(t.getTutorado().getNombre());
+                    dtoT.setCorreo(t.getTutorado().getCorreo());
+                    dtoT.setPassword(t.getTutorado().getPassword());
                     return dtoT;
                 }).toList();
 
@@ -143,12 +135,12 @@ public class TutoriaMapping {
         dto.setEdificio(entidad.getEdificio());
         dto.setAula(entidad.getAula());
 
-        List<TutoradosPublicosDTO> tutoradosDTO = entidad.getTutorados().stream()
+        List<TutoradosPublicosDTO> tutoradosDTO = entidad.getTutoriasTutorados().stream()
                 .map(t -> {
                     TutoradosPublicosDTO dtoT = new TutoradosPublicosDTO();
-                    dtoT.setMatricula(t.getMatricula());
-                    dtoT.setNombre(t.getNombre());
-                    dtoT.setCorreo(t.getCorreo());
+                    dtoT.setMatricula(t.getTutorado().getMatricula());
+                    dtoT.setNombre(t.getTutorado().getNombre());
+                    dtoT.setCorreo(t.getTutorado().getCorreo());
                     return dtoT;
                 }).toList();
 
