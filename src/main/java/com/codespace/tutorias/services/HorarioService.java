@@ -2,6 +2,7 @@ package com.codespace.tutorias.services;
 
 import com.codespace.tutorias.DTO.CrearHorarioDTO;
 import com.codespace.tutorias.DTO.HorariosDTO;
+import com.codespace.tutorias.DTO.HorariosMostrarDTO;
 import com.codespace.tutorias.DTO.HorariosPublicosDTO;
 import com.codespace.tutorias.Helpers.DateHelper;
 import com.codespace.tutorias.Mapping.HorarioMapping;
@@ -21,14 +22,14 @@ public class HorarioService {
     @Autowired
     private HorarioMapping horarioMapping;
 
-    public List<HorariosPublicosDTO> listarHorariosPublicos() {
+    public List<HorariosMostrarDTO> listarHorariosPublicos() {
         return horarioRepository.findAll()
                 .stream()
                 .map(horarioMapping::convertirAPublica)
                 .toList();
     }
 
-    public Optional<HorariosPublicosDTO> buscarHorarioPublico(int id) {
+    public Optional<HorariosMostrarDTO> buscarHorarioPublico(int id) {
         return horarioRepository.findById(id)
                 .map(horarioMapping::convertirAPublica);
     }
@@ -64,5 +65,13 @@ public class HorarioService {
 
     private List<Horario> findByTutor(String matricula){
         return horarioRepository.findByTutor(matricula);
+    }
+
+    public List<HorariosMostrarDTO> misHorarios(String matricula){
+        return horarioRepository.findByTutor(matricula)
+                .stream()
+                .map(horarioMapping::convertirAPublica)
+                .toList();
+
     }
 }

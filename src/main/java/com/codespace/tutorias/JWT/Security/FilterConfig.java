@@ -17,7 +17,7 @@ public class FilterConfig {
     public FilterRegistrationBean<JWTFilter> jwtFilterRegistration() {
         FilterRegistrationBean<JWTFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtFilter);
-        registrationBean.addUrlPatterns("/tutorias/*", "/tutorado/*", "/tutor/*"); // rutas protegidas
+        registrationBean.addUrlPatterns("/tutorias/*", "/tutorado/*", "/tutor/*", "/horarios/*");
         return registrationBean;
     }
 }

@@ -30,7 +30,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7); // Quitar "Bearer "
+            String token = authHeader.substring(7);
 
             try {
                 Claims claims = Jwts.parserBuilder()
