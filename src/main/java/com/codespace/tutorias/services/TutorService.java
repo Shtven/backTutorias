@@ -3,11 +3,16 @@ package com.codespace.tutorias.services;
 import com.codespace.tutorias.DTO.CambioPasswordDTO;
 import com.codespace.tutorias.DTO.TutorDTO;
 import com.codespace.tutorias.DTO.TutoresPublicosDTO;
+import com.codespace.tutorias.DTO.TutoriasPublicasDTO;
 import com.codespace.tutorias.Mapping.TutorMapping;
+import com.codespace.tutorias.Mapping.TutoriaMapping;
 import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.Tutor;
+import com.codespace.tutorias.models.TutoriaTutorado;
 import com.codespace.tutorias.repository.TutorRepository;
 
+
+import com.codespace.tutorias.repository.TutoriasRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,11 @@ public class TutorService {
     private TutorMapping tutorMapping;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TutoriasRepository tutoriasRepository;
+    @Autowired
+    private TutoriaMapping tutoriaMapping;
+
 
     public List<TutoresPublicosDTO> mostrarTutoresPublicos(){
         return tutorRepository.findAll()
@@ -55,6 +65,12 @@ public class TutorService {
 
     public Optional<TutorDTO> buscarTutorPrivado(String id){
         return tutorRepository.findById(id).map(tutorMapping::convertirADTO);
+    }
+
+    public List<TutoriasPublicasDTO> findMisTutorias(String matricula) {
+        return tutoriasRepository.findTutoriasPorTutor(matricula).stream()
+                .map(tutoriaMapping::convertirAPublicas)
+                .toList();
     }
 
 }
