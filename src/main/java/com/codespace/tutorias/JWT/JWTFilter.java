@@ -45,16 +45,19 @@ public class JWTFilter extends OncePerRequestFilter {
                         .parseClaimsJws(token)
                         .getBody();
 
-                request.setAttribute("matricula", claims.get("matricula"));
-                request.setAttribute("rol", claims.get("rol"));
+                String rol = claims.get("rol", String.class);
+                String matricula = claims.get("matricula", String.class);
 
-                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(claims.get("rol").toString()));
-                Authentication auth = new UsernamePasswordAuthenticationToken(claims.get("matricula"), null, authorities);
+                request.setAttribute("matricula", matricula);
+                request.setAttribute("rol", rol);
+
+                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + rol));
+                Authentication auth = new UsernamePasswordAuthenticationToken(matricula, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token inválido o expirado");
+                response.getWriter().write("Token inv\u00e1lido o expirado");
                 return;
             }
         }
