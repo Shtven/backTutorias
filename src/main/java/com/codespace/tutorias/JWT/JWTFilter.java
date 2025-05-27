@@ -9,11 +9,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Component
 public class JWTFilter extends OncePerRequestFilter {
@@ -41,6 +47,10 @@ public class JWTFilter extends OncePerRequestFilter {
 
                 request.setAttribute("matricula", claims.get("matricula"));
                 request.setAttribute("rol", claims.get("rol"));
+
+                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(claims.get("rol").toString()));
+                Authentication auth = new UsernamePasswordAuthenticationToken(claims.get("matricula"), null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
