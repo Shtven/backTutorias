@@ -1,6 +1,7 @@
 package com.codespace.tutorias.controllers;
 
 import com.codespace.tutorias.DTO.CrearHorarioDTO;
+import com.codespace.tutorias.DTO.HorariosMostrarDTO;
 import com.codespace.tutorias.DTO.HorariosPublicosDTO;
 import com.codespace.tutorias.DTO.HorariosDTO;
 import com.codespace.tutorias.exceptions.ApiResponse;
@@ -21,12 +22,12 @@ public class HorarioController {
     private HorarioService horarioService;
 
     @GetMapping("/all")
-    public List<HorariosPublicosDTO> obtenerHorarios() {
+    public List<HorariosMostrarDTO> obtenerHorarios() {
         return horarioService.listarHorariosPublicos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HorariosPublicosDTO> obtenerHorario(@PathVariable int id) {
+    public ResponseEntity<HorariosMostrarDTO> obtenerHorario(@PathVariable int id) {
         return horarioService.buscarHorarioPublico(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

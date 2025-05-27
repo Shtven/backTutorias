@@ -18,7 +18,5 @@ public interface TutoriasRepository extends JpaRepository<Tutoria, Integer> {
     @Query("SELECT t FROM Tutoria t JOIN t.horario h JOIN h.tutor tut WHERE LOWER(tut.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")
     List<Tutoria> findTutoriasPorNombreDeTutor(String nombre);
 
-    @Query("SELECT COUNT(t) FROM Tutoria t")
-    long countTotalTutorias();
 
 }

@@ -128,8 +128,6 @@ public class TutoriaMapping {
         tutoresDTO.setNombre(entidad.getHorario().getTutor().getNombre());
         tutoresDTO.setCorreo(entidad.getHorario().getTutor().getCorreo());
 
-        horariosDTO.setTutor(tutoresDTO);
-
         dto.setHorario(horariosDTO);
         dto.setFecha(entidad.getFecha());
         dto.setEdificio(entidad.getEdificio());
