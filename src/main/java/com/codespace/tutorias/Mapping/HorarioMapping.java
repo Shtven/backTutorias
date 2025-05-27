@@ -56,19 +56,11 @@ public class HorarioMapping {
         return dto;
     }
 
-    public HorariosPublicosDTO convertirAPublica(Horario entidad) {
-        HorariosPublicosDTO dto = new HorariosPublicosDTO();
-        dto.setIdHorario(entidad.getIdHorario());
+    public HorariosMostrarDTO convertirAPublica(Horario entidad) {
+        HorariosMostrarDTO dto = new HorariosMostrarDTO();
         dto.setDia(entidad.getDia());
         dto.setHoraInicio(entidad.getHoraInicio());
         dto.setHoraFin(entidad.getHoraFin());
-
-        TutoresPublicosDTO tutPub = new TutoresPublicosDTO();
-        tutPub.setMatricula(entidad.getTutor().getMatricula());
-        tutPub.setNombre(entidad.getTutor().getNombre());
-        tutPub.setCorreo(entidad.getTutor().getCorreo());
-        dto.setTutor(tutPub);
-
         return dto;
     }
 }
