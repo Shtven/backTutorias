@@ -39,19 +39,19 @@ public class LoginController {
 
         if (tutor.isPresent()) {
             if ("Shtven".equals(tutor.get().getMatricula()) && password.equals(tutor.get().getPassword())) {
-                String token = jwtUtil.generateToken(matricula, "ROLE_ADMIN");
+                String token = jwtUtil.generateToken(matricula, "ADMIN");
                 return ResponseEntity.ok(Map.of("token", token, "rol", "admin"));
             }
 
             if (passwordEncoder.matches(password, tutor.get().getPassword())) {
-                String token = jwtUtil.generateToken(matricula, "ROLE_TUTOR");
+                String token = jwtUtil.generateToken(matricula, "TUTOR");
                 return ResponseEntity.ok(Map.of("token", token, "rol", "tutor"));
             }
         }
 
         Optional<TutoradoDTO> tutorado = tutoradoService.buscarTutoradoPrivado(matricula);
         if (tutorado.isPresent() && passwordEncoder.matches(password, tutorado.get().getPassword())){
-            String token = jwtUtil.generateToken(matricula, "ROLE_TUTORADO");
+            String token = jwtUtil.generateToken(matricula, "TUTORADO");
             return ResponseEntity.ok(Map.of("token", token, "rol", "tutorado"));
         }
 
