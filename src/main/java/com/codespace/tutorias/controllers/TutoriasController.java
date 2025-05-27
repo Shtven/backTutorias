@@ -24,7 +24,7 @@ public class TutoriasController {
     public ResponseEntity<?> obtenerTutorias(HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
-        if (!"TUTORADO".equals(rol) && !"TUTOR".equals(rol)) {
+        if (!"ROLE_TUTORADO".equals(rol) && !"ROLE_TUTOR".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
@@ -43,7 +43,7 @@ public class TutoriasController {
     public ResponseEntity<?> generarTutoria(@Valid @RequestBody CrearTutoriaDTO dto, HttpServletRequest request){
         String rol = (String) request.getAttribute("rol");
 
-        if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
+        if (!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
@@ -54,7 +54,7 @@ public class TutoriasController {
     public ResponseEntity<?> buscarPorMatriculaONombre(@RequestParam String valor, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
-        if (!"TUTORADO".equals(rol) && !"ADMIN".equals(rol)) {
+        if (!"ROLE_TUTORADO".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
@@ -69,7 +69,7 @@ public class TutoriasController {
     public ResponseEntity<?> editarTutoria(@RequestBody TutoriasDTO dto, HttpServletRequest request){
         String rol = (String) request.getAttribute("rol");
 
-         if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
+         if (!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
              return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
          }
 
@@ -80,7 +80,7 @@ public class TutoriasController {
     public ResponseEntity<?> eliminarTutoria(@PathVariable int idTutoria, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
-        if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
+        if (!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
@@ -93,7 +93,7 @@ public class TutoriasController {
     public ResponseEntity<?> tutoriaCompletada(@PathVariable int idTutoria, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
-        if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
+        if (!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
@@ -107,7 +107,7 @@ public class TutoriasController {
     public ResponseEntity<?> verInscritos(@PathVariable int idTutoria, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
-        if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
+        if (!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
