@@ -37,13 +37,13 @@ public class LoginController {
 
         Optional<TutorDTO> tutor = tutorService.buscarTutorPrivado(matricula);
         if (tutor.isPresent() && passwordEncoder.matches(password, tutor.get().getPassword())){
-            String token = jwtUtil.generateToken(matricula, "tutor");
+            String token = jwtUtil.generateToken(matricula, "ROLE_TUTOR");
             return ResponseEntity.ok(Map.of("token", token, "rol", "tutor"));
         }
 
         Optional<TutoradoDTO> tutorado = tutoradoService.buscarTutoradoPrivado(matricula);
         if (tutorado.isPresent() && passwordEncoder.matches(password, tutorado.get().getPassword())){
-            String token = jwtUtil.generateToken(matricula, "tutorado");
+            String token = jwtUtil.generateToken(matricula, "ROLE_TUTORADO");
             return ResponseEntity.ok(Map.of("token", token, "rol", "tutorado"));
         }
 
