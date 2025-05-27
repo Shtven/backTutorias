@@ -44,7 +44,7 @@ public class TutorController {
         String rol = (String) request.getAttribute("rol");
         String matricula = (String) request.getAttribute("matricula");
 
-        if(!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
+        if(!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
@@ -56,7 +56,7 @@ public class TutorController {
         String rol = (String) request.getAttribute("rol");
         String matricula = (String) request.getAttribute("matricula");
 
-        if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
+        if (!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
