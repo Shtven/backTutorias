@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
-
 @Configuration
 public class SecurityConfig {
 
@@ -33,15 +32,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/tutorado/registro", "/tutor/registro").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/tutorias/all", "/tutorias/{id}", "/tutorias/buscar").hasAnyRole("TUTOR", "TUTORADO")
-                        .requestMatchers("/tutorias/**").hasRole("TUTOR")
-                        .requestMatchers("/horarios/**").hasRole("TUTOR")
-                        .requestMatchers("/tutorado/**").hasRole("TUTORADO")
-                        .requestMatchers("/tutor/**").hasRole("TUTOR")
+                        .requestMatchers(HttpMethod.GET, "/tutorias/all", "/tutorias/{id}", "/tutorias/buscar").hasAnyRole("TUTOR", "TUTORADO", "ADMIN")
+                        .requestMatchers("/tutorias/**").hasAnyRole("TUTOR", "ADMIN")
+                        .requestMatchers("/horarios/**").hasAnyRole("TUTOR", "ADMIN")
+                        .requestMatchers("/tutorado/**").hasAnyRole("TUTORADO", "ADMIN")
+                        .requestMatchers("/tutor/**").hasAnyRole("TUTOR", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
 }

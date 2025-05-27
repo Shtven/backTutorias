@@ -44,11 +44,23 @@ public class TutorController {
         String rol = (String) request.getAttribute("rol");
         String matricula = (String) request.getAttribute("matricula");
 
-        if(!"tutor".equals(rol)){
+        if(!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Mis horarios:", horarioService.misHorarios(matricula)));
+    }
+
+    @GetMapping("/misTutorias")
+    public ResponseEntity<?> misTutorias(HttpServletRequest request){
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if (!"ROLE_TUTOR".equals(rol) && !"ROLE_ADMIN".equals(rol)) {
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Tutorias Disponibles",tutorService.findMisTutorias(matricula)));
     }
 
 }
