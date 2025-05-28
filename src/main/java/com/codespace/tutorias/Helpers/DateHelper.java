@@ -16,10 +16,11 @@ public class DateHelper {
     }
 
     public static boolean yaComenzo(LocalDate fecha, LocalTime horaInicio){
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime inicioTutoria = LocalDateTime.of(fecha, horaInicio);
+        ZoneId zonaMexico = ZoneId.of("America/Mexico_City");
+        ZonedDateTime ahora = ZonedDateTime.now(zonaMexico);
+        ZonedDateTime inicioTutoria = ZonedDateTime.of(fecha, horaInicio, zonaMexico);
 
-        return now.isAfter(inicioTutoria);
+        return ahora.isAfter(inicioTutoria);
     }
 }
 

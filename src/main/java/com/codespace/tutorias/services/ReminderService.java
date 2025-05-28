@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.List;
 
 @Service
@@ -22,8 +21,10 @@ public class ReminderService {
     public void enviarRecordatorios() {
         List<Tutoria> tutorias = tutoriasRepository.findAll();
 
-        LocalDate hoy = LocalDate.now();
-        LocalTime ahora = LocalTime.now();
+        ZoneId zonaMexico = ZoneId.of("America/Mexico_City");
+        ZonedDateTime ahoraZoned = ZonedDateTime.now(zonaMexico);
+        LocalDate hoy = ahoraZoned.toLocalDate();
+        LocalTime ahora = ahoraZoned.toLocalTime();
 
         for (Tutoria tutoria : tutorias) {
             if (!"COMPLETADO".equalsIgnoreCase(tutoria.getEstado())
@@ -35,18 +36,18 @@ public class ReminderService {
                 if (minutosRestantes == 15 && ahora.isBefore(inicio) && !"NOTIFICADA".equalsIgnoreCase(tutoria.getEstado())) {
                     for (TutoriaTutorado t : tutoria.getTutoriasTutorados()) {
                         String cuerpo = String.format("""
-    <html>
-    <body>
-        <h2 style='color: #4CAF50;'>¡Hola %s!</h2>
-        <p>Te recordamos que tienes una <strong>tutoría</strong> próxima a iniciar.</p>
-        <p><b>Materia:</b> %s</p>
-        <p><b>Horario:</b> %s</p>
-        <p><b>Edificio:</b> %s | <b>Aula:</b> %s</p>
-        <hr>
-        <p style='color: gray; font-size: 12px;'>Este es un mensaje automático del sistema de tutorías.</p>
-    </body>
-    </html>
-    """,
+<html>
+<body>
+    <h2 style='color: #4CAF50;'>¡Hola %s!</h2>
+    <p>Te recordamos que tienes una <strong>tutoría</strong> próxima a iniciar.</p>
+    <p><b>Materia:</b> %s</p>
+    <p><b>Horario:</b> %s</p>
+    <p><b>Edificio:</b> %s | <b>Aula:</b> %s</p>
+    <hr>
+    <p style='color: gray; font-size: 12px;'>Este es un mensaje automático del sistema de tutorías.</p>
+</body>
+</html>
+""",
                                 t.getTutorado().getNombre(),
                                 tutoria.getMateria().getNombreMateria(),
                                 tutoria.getHorario().getHoraInicio(),
@@ -59,8 +60,6 @@ public class ReminderService {
                                 "Recordatorio de tutoría próxima",
                                 cuerpo
                         );
-
-
                     }
 
                     tutoria.setEstado("NOTIFICADA");
