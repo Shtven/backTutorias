@@ -33,7 +33,7 @@ public class TutoradoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TutoradosPublicosDTO> getTutorado(@PathVariable String id){
+    public ResponseEntity<TutoradosPublicosDTO> getTutorado(@PathVariable("id") String id){
         return tutoradoService.buscarTutoradoPublico(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
@@ -50,7 +50,7 @@ public class TutoradoController {
     }
 
     @PostMapping("/inscribirse/{id}")
-    public ResponseEntity<?> inscribirATutoria(@PathVariable int idTutoria, HttpServletRequest request){
+    public ResponseEntity<?> inscribirATutoria(@PathVariable("id")  int idTutoria, HttpServletRequest request){
         String rol = (String) request.getAttribute("rol");
         String matricula = (String) request.getAttribute("matricula");
 
@@ -64,7 +64,7 @@ public class TutoradoController {
     }
 
     @PostMapping("/cancelar/{id}")
-    public ResponseEntity<?> cancelarInscripcion(@PathVariable int idTutoria, HttpServletRequest request){
+    public ResponseEntity<?> cancelarInscripcion(@PathVariable("id") int idTutoria, HttpServletRequest request){
         String rol = (String) request.getAttribute("rol");
         String matricula = (String) request.getAttribute("matricula");
 
