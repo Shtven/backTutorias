@@ -32,7 +32,7 @@ public class TutoriasController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerTutoria(@PathVariable int id){
+    public ResponseEntity<?> obtenerTutoria(@PathVariable("id") int id){
         return tutoriasService.findTutoriaPublica(id)
                 .map(t -> ResponseEntity.ok(new ApiResponse<>(true, "Tutoría encontrada", t)))
                 .orElse(ResponseEntity.status(404).body(new ApiResponse<>(false, "Tutoría no encontrada", null)));
@@ -77,7 +77,7 @@ public class TutoriasController {
      }
 
     @DeleteMapping("/eliminar/{idTutoria}")
-    public ResponseEntity<?> eliminarTutoria(@PathVariable int idTutoria, HttpServletRequest request) {
+    public ResponseEntity<?> eliminarTutoria(@PathVariable("idTutoria") int idTutoria, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
         if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
@@ -90,7 +90,7 @@ public class TutoriasController {
     }
 
     @PutMapping("/completa/{idTutoria}")
-    public ResponseEntity<?> tutoriaCompletada(@PathVariable int idTutoria, HttpServletRequest request) {
+    public ResponseEntity<?> tutoriaCompletada(@PathVariable("idTutoria") int idTutoria, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
         if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
@@ -104,7 +104,7 @@ public class TutoriasController {
     }
 
     @GetMapping("/inscritos/{idTutoria}")
-    public ResponseEntity<?> verInscritos(@PathVariable int idTutoria, HttpServletRequest request) {
+    public ResponseEntity<?> verInscritos(@PathVariable("idTutoria") int idTutoria, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
 
         if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
