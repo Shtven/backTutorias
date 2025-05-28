@@ -38,7 +38,7 @@ public class HorarioController {
         String rol = (String) request.getAttribute("rol");
         String matricula = (String) request.getAttribute("matricula");
 
-        if(!"ROLE_TUTOR".equals(rol)){
+        if(!"TUTOR".equals(rol)){
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
