@@ -27,7 +27,7 @@ public class HorarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HorariosMostrarDTO> obtenerHorario(@PathVariable int id) {
+    public ResponseEntity<HorariosMostrarDTO> obtenerHorario(@PathVariable("id") int id) {
         return horarioService.buscarHorarioPublico(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -38,7 +38,7 @@ public class HorarioController {
         String rol = (String) request.getAttribute("rol");
         String matricula = (String) request.getAttribute("matricula");
 
-        if(!"TUTOR".equals(rol)){
+        if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
@@ -46,14 +46,14 @@ public class HorarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> actualizarHorario(@PathVariable int id, @Valid @RequestBody HorariosDTO dto) {
+    public ResponseEntity<Void> actualizarHorario(@PathVariable("id") int id, @Valid @RequestBody HorariosDTO dto) {
         return horarioService.actualizarHorario(id, dto)
                 .map(h -> ResponseEntity.noContent().<Void>build())
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarHorario(@PathVariable int id) {
+    public ResponseEntity<Void> eliminarHorario(@PathVariable("id") int id) {
         horarioService.eliminarHorario(id);
         return ResponseEntity.noContent().build();
     }
