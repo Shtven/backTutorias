@@ -49,6 +49,8 @@ public class HorarioMapping {
         TutorDTO tut = new TutorDTO();
         tut.setMatricula(entidad.getTutor().getMatricula());
         tut.setNombre(entidad.getTutor().getNombre());
+        tut.setApellidoP(entidad.getTutor().getApellidoP());
+        tut.setApellidoM(entidad.getTutor().getApellidoM());
         tut.setCorreo(entidad.getTutor().getCorreo());
         tut.setPassword(entidad.getTutor().getPassword());
         dto.setTutor(tut);
