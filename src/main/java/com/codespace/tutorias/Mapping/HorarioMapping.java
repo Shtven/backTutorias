@@ -60,6 +60,7 @@ public class HorarioMapping {
 
     public HorariosMostrarDTO convertirAPublica(Horario entidad) {
         HorariosMostrarDTO dto = new HorariosMostrarDTO();
+        dto.setIdHorario(entidad.getIdHorario());
         dto.setDia(entidad.getDia());
         dto.setHoraInicio(entidad.getHoraInicio());
         dto.setHoraFin(entidad.getHoraFin());
