@@ -1,5 +1,6 @@
 package com.codespace.tutorias.controllers;
 
+import com.codespace.tutorias.DTO.ActualizarTutoriaDTO;
 import com.codespace.tutorias.DTO.CrearTutoriaDTO;
 import com.codespace.tutorias.DTO.TutoriasDTO;
 import com.codespace.tutorias.exceptions.ApiResponse;
@@ -65,15 +66,15 @@ public class TutoriasController {
         }
     }
 
-     @PutMapping("/editar")
-    public ResponseEntity<?> editarTutoria(@RequestBody TutoriasDTO dto, HttpServletRequest request){
+     @PutMapping("/editar/{idTutoria}")
+    public ResponseEntity<?> editarTutoria(@PathVariable("idTutoria") int idTutoria, @RequestBody ActualizarTutoriaDTO dto, HttpServletRequest request){
         String rol = (String) request.getAttribute("rol");
 
          if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
              return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
          }
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Tutoria editada correctamente ",tutoriasService.editarTutoria(dto)));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Tutoria editada correctamente ",tutoriasService.editarTutoria(idTutoria, dto)));
      }
 
     @DeleteMapping("/eliminar/{idTutoria}")
