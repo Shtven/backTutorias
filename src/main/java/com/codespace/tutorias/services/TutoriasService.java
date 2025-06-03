@@ -78,8 +78,8 @@ public class TutoriasService {
         return tutoriasRepository.findTutoriasPorTutor(matricula);
     }
 
-    public TutoriasDTO editarTutoria(TutoriasDTO dto){
-        Tutoria tutoria = tutoriaMapping.convertirAEntidad(dto);
+    public TutoriasDTO editarTutoria(int id, ActualizarTutoriaDTO dto){
+        Tutoria tutoria = tutoriaMapping.convertirEdicion(id, dto);
 
         Tutoria tuto = tutoriasRepository.findById(tutoria.getIdTutoria())
                 .orElseThrow(() -> new BusinessException("La tutoría no existe."));
