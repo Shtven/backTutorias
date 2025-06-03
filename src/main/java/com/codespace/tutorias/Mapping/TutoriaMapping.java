@@ -6,6 +6,7 @@ import com.codespace.tutorias.models.*;
 import com.codespace.tutorias.repository.HorarioRepository;
 import com.codespace.tutorias.repository.MateriaRepository;
 import com.codespace.tutorias.repository.TutoradoRepository;
+import com.codespace.tutorias.repository.TutoriasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,8 @@ public class TutoriaMapping {
     private HorarioRepository horarioRepository;
     @Autowired
     private MateriaRepository materiaRepository;
+    @Autowired
+    private TutoriasRepository tutoriasRepository;
 
     public Tutoria convertirAEntidad(TutoriasDTO dto) {
         Tutoria entidad = new Tutoria();
@@ -64,6 +67,23 @@ public class TutoriaMapping {
         entidad.setEdificio(dto.getEdificio());
         entidad.setAula(dto.getAula());
         entidad.setEstado("ACTIVO");
+
+        return entidad;
+    }
+
+    public Tutoria convertirEdicion(int id, ActualizarTutoriaDTO dto){
+        Tutoria entidad = tutoriasRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Tutoria no existente."));
+
+        entidad.setHorario(horarioRepository.findById(dto.getIdHorario())
+                .orElseThrow(() -> new BusinessException("Horario no existente.")));
+
+        entidad.setFecha(dto.getFecha());
+        entidad.setEdificio(dto.getEdificio());
+        entidad.setAula(dto.getAula());
+        entidad.setEstado(dto.getEstado());
+        entidad.setMateria(materiaRepository.findById(dto.getNrcMateria())
+                .orElseThrow(() -> new BusinessException("Materia no existente.")));
 
         return entidad;
     }
