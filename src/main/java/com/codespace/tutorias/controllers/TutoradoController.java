@@ -79,7 +79,7 @@ public class TutoradoController {
     @PutMapping("/correo")
     public ResponseEntity<?> enviarCorreoRecuperacion(@RequestBody String correo){
 
-        tutoradoService.cancelarInscripcion();
+        tutoradoService.mandarCorreoRecuperacion(correo);
         return ResponseEntity.ok(new ApiResponse<>(true, "Has cancelado tu inscripción a esta tutoria.", null));
     }
 }
