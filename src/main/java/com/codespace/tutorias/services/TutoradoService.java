@@ -131,5 +131,12 @@ public class TutoradoService {
         tutoriaTutoradoRepository.deleteById(id);
     }
 
+    public void mandarCorreoRecuperacion(String correo){
+        Tutorado tutorado = tutoradoRepository.findByCorreo(correo);
+        if(tutorado == null){
+            throw new BusinessException("Correo no asociado a algun tutorado");
+        }
+
+    }
 
 }
