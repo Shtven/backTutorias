@@ -1,5 +1,6 @@
 package com.codespace.tutorias.services;
 import com.codespace.tutorias.Helpers.EmailHelper;
+import com.codespace.tutorias.models.Tutorado;
 import com.codespace.tutorias.models.Tutoria;
 import com.codespace.tutorias.models.TutoriaTutorado;
 import com.codespace.tutorias.repository.TutoriasRepository;
@@ -26,19 +27,14 @@ public class ReminderService {
         LocalTime ahora = ahoraZoned.toLocalTime();
 
         for (Tutoria tutoria : tutorias) {
-            Tutoria tutoriaConTutorados = tutoriasRepository.findTutoriaWithTutorados(tutoria.getIdTutoria());
-
             if (!"COMPLETADO".equalsIgnoreCase(tutoria.getEstado())
                     && tutoria.getFecha().equals(hoy)) {
 
                 LocalTime inicio = tutoria.getHorario().getHoraInicio();
                 long minutosRestantes = java.time.Duration.between(ahora, inicio).toMinutes();
 
-                if (minutosRestantes <= 15 && ahora.isBefore(inicio) && !"NOTIFICADA".equalsIgnoreCase(tutoria.getEstado())) {
-                    for (TutoriaTutorado t : tutoriaConTutorados.getTutoriasTutorados()) {
-                        if(!t.getTutorado().isNotificarme()){
-                            continue;
-                        }
+                if (minutosRestantes == 15 && ahora.isBefore(inicio) && !"NOTIFICADA".equalsIgnoreCase(tutoria.getEstado())) {
+                    for (TutoriaTutorado t : tutoria.getTutoriasTutorados()) {
                         String cuerpo = String.format("""
 <html>
 <body>
@@ -94,8 +90,10 @@ public class ReminderService {
                             "Recordatorio: tu tutoría comienza en 15 minutos",
                             cuerpoTutor
                     );
+
                 }
             }
         }
     }
+
 }

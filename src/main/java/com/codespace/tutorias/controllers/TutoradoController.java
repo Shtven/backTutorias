@@ -82,31 +82,4 @@ public class TutoradoController {
         tutoradoService.mandarCorreoRecuperacion(correo);
         return ResponseEntity.ok(new ApiResponse<>(true, "Has cancelado tu inscripción a esta tutoria.", null));
     }
-
-    @PutMapping("/activarNotificaciones")
-    public ResponseEntity<?> activarNotificaciones(HttpServletRequest request){
-        String rol = (String) request.getAttribute("rol");
-        String matricula = (String) request.getAttribute("matricula");
-
-        if (!"TUTORADO".equals(rol) && !"ADMIN".equals(rol)) {
-            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
-        }
-
-        tutoradoService.activarNotificaciones(matricula);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Notificaciones activadas.", null));
-    }
-
-    @PutMapping("/desactivarNotificaciones")
-    public ResponseEntity<?> desactivarNotificaciones(HttpServletRequest request){
-        String rol = (String) request.getAttribute("rol");
-        String matricula = (String) request.getAttribute("matricula");
-
-        if (!"TUTORADO".equals(rol) && !"ADMIN".equals(rol)) {
-            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
-        }
-
-        tutoradoService.desactivarNotificaciones(matricula);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Notificaciones desactivadas.", null));
-    }
-
 }

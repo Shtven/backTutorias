@@ -19,7 +19,6 @@ public class Tutorado {
     private String apellidoM;
     private String correo;
     private String password;
-    private boolean notificarme = false;
 
     public Tutorado(){ }
 
@@ -76,13 +75,5 @@ public class Tutorado {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isNotificarme() {
-        return notificarme;
-    }
-
-    public void setNotificarme(boolean notificarme) {
-        this.notificarme = notificarme;
     }
 }
