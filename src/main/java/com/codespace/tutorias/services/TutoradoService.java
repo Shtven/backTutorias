@@ -139,4 +139,12 @@ public class TutoradoService {
 
     }
 
+    public void actualizarNotificaciones(String matricula, boolean estado){
+        Tutorado tutorado = tutoradoRepository.findById(matricula)
+                .orElseThrow(() -> new BusinessException("El tutorado no existe."));
+
+        tutorado.setRecordatorio(estado);
+
+        tutoradoRepository.save(tutorado);
+    }
 }

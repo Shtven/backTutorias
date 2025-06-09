@@ -19,6 +19,7 @@ public class Tutorado {
     private String apellidoM;
     private String correo;
     private String password;
+    private boolean recordatorio = false;
 
     public Tutorado(){ }
 
@@ -75,5 +76,13 @@ public class Tutorado {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isRecordatorio() {
+        return recordatorio;
+    }
+
+    public void setRecordatorio(boolean recordatorio) {
+        this.recordatorio = recordatorio;
     }
 }
