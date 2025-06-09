@@ -41,19 +41,19 @@ public class LoginController {
         if (tutor.isPresent()) {
             if ("Shtven".equals(tutor.get().getMatricula()) && password.equals(tutor.get().getPassword())) {
                 String token = jwtUtil.generateToken(matricula, "ADMIN");
-                return ResponseEntity.ok(Map.of("token", token, "rol", "admin", "nombre", tutor.get().getNombre()));
+                return ResponseEntity.ok(Map.of("token", token, "rol", "admin", "nombre", tutor.get().getNombre(), "correo", tutor.get().getCorreo()));
             }
 
             if (passwordEncoder.matches(password, tutor.get().getPassword())) {
                 String token = jwtUtil.generateToken(matricula, "TUTOR");
-                return ResponseEntity.ok(Map.of("token", token, "rol", "tutor", "nombre", tutor.get().getNombre()));
+                return ResponseEntity.ok(Map.of("token", token, "rol", "tutor", "nombre", tutor.get().getNombre(), "correo", tutor.get().getCorreo()));
             }
         }
 
         Optional<TutoradoDTO> tutorado = tutoradoService.buscarTutoradoPrivado(matricula);
         if (tutorado.isPresent() && passwordEncoder.matches(password, tutorado.get().getPassword())){
             String token = jwtUtil.generateToken(matricula, "TUTORADO");
-            return ResponseEntity.ok(Map.of("token", token, "rol", "tutorado","nombre", tutorado.get().getNombre()));
+            return ResponseEntity.ok(Map.of("token", token, "rol", "tutorado","nombre", tutorado.get().getNombre(), "correo", tutorado.get().getCorreo()));
         }
 
         return ResponseEntity.status(401).body(new ApiResponse<>(false, "Usuario y/o contraeña son incorrectos", null));
