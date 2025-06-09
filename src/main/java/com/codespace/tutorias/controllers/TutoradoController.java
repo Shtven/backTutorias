@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/tutorado")
@@ -82,4 +83,31 @@ public class TutoradoController {
         tutoradoService.mandarCorreoRecuperacion(correo);
         return ResponseEntity.ok(new ApiResponse<>(true, "Has cancelado tu inscripción a esta tutoria.", null));
     }
+
+    @PutMapping("/notificaciones")
+    public ResponseEntity<?> actualizarNotificaciones(
+            HttpServletRequest request,
+            @RequestBody Map<String, Boolean> payload) {
+
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if (!"TUTORADO".equals(rol) && !"ADMIN".equals(rol)) {
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        Boolean activar = payload.get("notificarme");
+        if (activar == null) {
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Valor no proporcionado", null));
+        }
+
+        tutoradoService.actualizarNotificaciones(matricula, activar);
+        if (!activar) {
+            return ResponseEntity.ok(new ApiResponse<>(true, "Notificaciones desactivadas", null));
+        }
+        else{
+            return ResponseEntity.ok(new ApiResponse<>(true, "Notificaciones activadas", null));
+        }
+    }
+
 }
