@@ -56,6 +56,6 @@ public class LoginController {
             return ResponseEntity.ok(Map.of("token", token, "rol", "tutorado","nombre", tutorado.get().getNombre()));
         }
 
-        return ResponseEntity.status(401).body(new ApiResponse<>(false, "Usuario y/o contraeña incorrectos", null));
+        return ResponseEntity.status(401).body(new ApiResponse<>(false, "Usuario y/o contraeña son incorrectos", null));
     }
 }
