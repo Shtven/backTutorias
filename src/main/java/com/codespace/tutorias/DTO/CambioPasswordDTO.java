@@ -1,26 +1,21 @@
 package com.codespace.tutorias.DTO;
 
+import jakarta.validation.constraints.Pattern;
+
 public class CambioPasswordDTO {
-    private String matricula;
-    private String passwordActual;
+    private String token;
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).{8,}$",
+            message = "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.")
     private String passwordNueva;
 
     public CambioPasswordDTO(){}
 
-    public void setMatricula(String matricula){
-        this.matricula = matricula;
+    public void setToken(String token){
+        this.token = token;
     }
 
-    public String getMatricula(){
-        return matricula;
-    }
-
-    public void setPasswordActual(String passwordActual){
-        this.passwordActual = passwordActual;
-    }
-
-    public String getPasswordActual(){
-        return passwordActual;
+    public String getToken(){
+        return token;
     }
 
     public void setPasswordNueva(String passwordNueva){

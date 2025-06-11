@@ -21,4 +21,6 @@ public interface TutoriasRepository extends JpaRepository<Tutoria, Integer> {
     @Query("SELECT t FROM Tutoria t JOIN FETCH t.tutoriasTutorados tt WHERE t.idTutoria = :idTutoria")
     Tutoria findTutoriaWithTutorados(@Param("idTutoria") int idTutoria);
 
+    @Query("SELECT t FROM Tutoria t JOIN FETCH t.tutoriasTutorados tt WHERE tt.tutorado.matricula = :matricula AND t.estado = 'CANCELADA'")
+    List<Tutoria> findTutoriasPorEstadoCancelado(@Param("matricula") String matricula);
 }

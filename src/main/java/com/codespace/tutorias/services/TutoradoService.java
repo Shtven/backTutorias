@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TutoradoService {
@@ -36,6 +38,8 @@ public class TutoradoService {
     private TutoriaTutoradoRepository tutoriaTutoradoRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private EmailService emailService;
 
 
     public List<TutoradoDTO> listarTutoradosPrivados() {
@@ -133,11 +137,27 @@ public class TutoradoService {
 
     public void mandarCorreoRecuperacion(String correo){
         Tutorado tutorado = tutoradoRepository.findByCorreo(correo);
-        if(tutorado == null){
-            throw new BusinessException("Correo no asociado a algun tutorado");
+
+        String token = UUID.randomUUID().toString();
+        tutorado.setTokenRecuperacion(token);
+        tutorado.setTokenExpiracion(LocalDateTime.now().plusMinutes(30));
+
+        emailService.enviarCorreoRecuperacion(correo, tutorado.getNombre(), token);
+    }
+
+    public void cambiarPasswordConToken(Tutorado tutorado, String token, String nuevaPassword) {
+
+        if (tutorado.getTokenExpiracion() == null || tutorado.getTokenExpiracion().isBefore(LocalDateTime.now())) {
+            throw new BusinessException("Token expirado");
         }
 
+        tutorado.setPassword(passwordEncoder.encode(nuevaPassword));
+        tutorado.setTokenRecuperacion(null);
+        tutorado.setTokenExpiracion(null);
+
+        tutoradoRepository.save(tutorado);
     }
+
 
     public void actualizarNotificaciones(String matricula, boolean estado){
         Tutorado tutorado = tutoradoRepository.findById(matricula)
@@ -146,5 +166,11 @@ public class TutoradoService {
         tutorado.setRecordatorio(estado);
 
         tutoradoRepository.save(tutorado);
+    }
+
+    public List<TutoriasPublicasDTO> misTutoriasCanceladas(String matricula){
+        return tutoriasRepository.findTutoriasPorEstadoCancelado(matricula)
+                .stream().map(tutoriaMapping::convertirAPublicas)
+                .toList();
     }
 }

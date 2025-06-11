@@ -1,5 +1,6 @@
 package com.codespace.tutorias.controllers;
 
+import com.codespace.tutorias.DTO.CambioPasswordDTO;
 import com.codespace.tutorias.DTO.TutorDTO;
 import com.codespace.tutorias.DTO.TutoresPublicosDTO;
 import com.codespace.tutorias.exceptions.ApiResponse;
@@ -60,7 +61,9 @@ public class TutorController {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Tutorias Disponibles",tutorService.findMisTutorias(matricula)));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Mis tutorias",tutorService.findMisTutorias(matricula)));
     }
+
+
 
 }

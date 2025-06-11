@@ -10,8 +10,13 @@ import com.codespace.tutorias.repository.TutoradoRepository;
 import com.codespace.tutorias.repository.TutoriaTutoradoRepository;
 import com.codespace.tutorias.repository.TutoriasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +32,8 @@ public class TutoriasService {
     private TutoriaTutoradoRepository tutoriaTutoradoRepository;
     @Autowired
     private TutoradoMapping tutoradoMapping;
+    @Autowired
+    private EmailService emailService;
 
     public List<TutoriasPublicasDTO> mostrarTutorias(){
         return tutoriasRepository.findAll().stream().map(tutoriaMapping::convertirAPublicas).toList();
@@ -44,7 +51,7 @@ public class TutoriasService {
                         tutoria.getHorario().getHoraInicio(),
                         tutoria.getHorario().getHoraFin(),
                         horario.getHoraInicio(),
-                        horario.getHoraFin())) {
+                        horario.getHoraFin()) && (!tutoria.getEstado().equals("COMPLETADA") && !tutoria.getEstado().equals("CANCELADA"))) {
                     throw new BusinessException("Ya existe una tutoría en ese horario y día.");
                 }
             }
@@ -114,7 +121,7 @@ public class TutoriasService {
         Tutoria tutoria =  tutoriasRepository.findById(idTutoria)
                 .orElseThrow(() -> new BusinessException("La tutoría no existe."));
 
-        tutoria.setEstado("COMPLETADO");
+        tutoria.setEstado("COMPLETADA");
 
         tutoriasRepository.save(tutoria);
     }
@@ -130,4 +137,56 @@ public class TutoriasService {
                 .toList();
     }
 
+    public void cancelarTutoria(int idTutoria){
+        Tutoria tutoria =  tutoriasRepository.findById(idTutoria)
+                .orElseThrow(() -> new BusinessException("La tutoría no existe."));
+
+        if(DateHelper.faltaMenosDe15Minutos(tutoria.getFecha(), tutoria.getHorario().getHoraInicio())){
+            throw new BusinessException("Faltan solo 15 minútos para que inicie la tutoria, ya no puedes cancelar la tutoria");
+        }
+
+        tutoria.setEstado("CANCELADA");
+
+        tutoriasRepository.save(tutoria);
+
+        emailService.enviarCorreoCancelacion(tutoria);
+    }
+
+    @Scheduled(fixedRate = 60000)
+    private void marcarTutoriaCompleta(){
+        List<Tutoria> tutorias = tutoriasRepository.findAll();
+        ZoneId zonaMexico = ZoneId.of("America/Mexico_City");
+        ZonedDateTime ahoraZoned = ZonedDateTime.now(zonaMexico);
+        LocalDate hoy = ahoraZoned.toLocalDate();
+        LocalTime ahora = ahoraZoned.toLocalTime();
+
+        for (Tutoria t : tutorias){
+            if((!"COMPLETADA".equalsIgnoreCase(t.getEstado()) && !"CANCELADA".equalsIgnoreCase(t.getEstado()))
+                    && t.getFecha().equals(hoy)){
+                if(ahora.isAfter(t.getHorario().getHoraFin()) && "EN CURSO".equals(t.getEstado())){
+                    t.setEstado("COMPLETADA");
+                    tutoriasRepository.save(t);
+                }
+            }
+        }
+    }
+
+    @Scheduled(fixedRate = 60000)
+    private void marcarTutoriaEnCurso(){
+        List<Tutoria> tutorias = tutoriasRepository.findAll();
+        ZoneId zonaMexico = ZoneId.of("America/Mexico_City");
+        ZonedDateTime ahoraZoned = ZonedDateTime.now(zonaMexico);
+        LocalDate hoy = ahoraZoned.toLocalDate();
+        LocalTime ahora = ahoraZoned.toLocalTime();
+
+        for (Tutoria t : tutorias){
+            if((!"COMPLETADA".equalsIgnoreCase(t.getEstado()) && !"CANCELADA".equalsIgnoreCase(t.getEstado()))
+                    && t.getFecha().equals(hoy)){
+                if(ahora.isAfter(t.getHorario().getHoraInicio()) && "A PUNTO DE INICIAR".equals(t.getEstado())){
+                    t.setEstado("EN CURSO");
+                    tutoriasRepository.save(t);
+                }
+            }
+        }
+    }
 }

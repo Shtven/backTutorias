@@ -104,6 +104,19 @@ public class TutoriasController {
 
     }
 
+    @PutMapping("/cancelarTutoria/{idTutoria}")
+    public ResponseEntity<?> cancelarTutoria(@PathVariable("idTutoria") int idTutoria, HttpServletRequest request){
+        String rol = (String) request.getAttribute("rol");
+
+        if (!"TUTOR".equals(rol) && !"ADMIN".equals(rol)) {
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        tutoriasService.cancelarTutoria(idTutoria);
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Has cancelado la tutoria.", null));
+    }
+
     @GetMapping("/inscritos/{idTutoria}")
     public ResponseEntity<?> verInscritos(@PathVariable("idTutoria") int idTutoria, HttpServletRequest request) {
         String rol = (String) request.getAttribute("rol");
