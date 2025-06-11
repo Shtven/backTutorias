@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/tutorado/registro", "/tutor/registro", "tutor/correo", "tutorado/correo").permitAll()
+                        .requestMatchers("/tutorado/registro", "/tutor/registro", "tutor/correo", "tutorado/correo", "tutorado/nuevaContraseña", "tutor/nuevaContraseña").permitAll()
                         .requestMatchers(HttpMethod.GET, "/tutorias/all", "/tutorias/{id}", "/tutorias/buscar").hasAnyRole("TUTOR", "TUTORADO", "ADMIN")
                         .requestMatchers("/tutorias/**").hasAnyRole("TUTOR", "ADMIN")
                         .requestMatchers("/horarios/**").hasAnyRole("TUTOR", "ADMIN")

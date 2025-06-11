@@ -47,7 +47,7 @@ public class TutoradoController {
             return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
         }
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Tutorias Disponibles",tutoradoService.findMisTutorias(matricula)));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Mis tutorias",tutoradoService.findMisTutorias(matricula)));
     }
 
     @PostMapping("/inscribirse/{id}")
@@ -77,13 +77,6 @@ public class TutoradoController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Has cancelado tu inscripción a esta tutoria.", null));
     }
 
-    @PutMapping("/correo")
-    public ResponseEntity<?> enviarCorreoRecuperacion(@RequestBody String correo){
-
-        tutoradoService.mandarCorreoRecuperacion(correo);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Has cancelado tu inscripción a esta tutoria.", null));
-    }
-
     @PutMapping("/notificaciones")
     public ResponseEntity<?> actualizarNotificaciones(
             HttpServletRequest request,
@@ -108,6 +101,18 @@ public class TutoradoController {
         else{
             return ResponseEntity.ok(new ApiResponse<>(true, "Notificaciones activadas", null));
         }
+    }
+
+    @GetMapping("/misTutoriasCanceladas")
+    public ResponseEntity<?> misTutoriasCanceladas(HttpServletRequest request){
+        String rol = (String) request.getAttribute("rol");
+        String matricula = (String) request.getAttribute("matricula");
+
+        if (!"TUTORADO".equals(rol) && !"ADMIN".equals(rol)) {
+            return ResponseEntity.status(403).body(new ApiResponse<>(false, "Acceso denegado", null));
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Tutorias Canceladas", tutoradoService.misTutoriasCanceladas(matricula)));
     }
 
 }

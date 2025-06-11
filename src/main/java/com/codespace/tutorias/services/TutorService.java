@@ -8,6 +8,7 @@ import com.codespace.tutorias.Mapping.TutorMapping;
 import com.codespace.tutorias.Mapping.TutoriaMapping;
 import com.codespace.tutorias.exceptions.BusinessException;
 import com.codespace.tutorias.models.Tutor;
+import com.codespace.tutorias.models.Tutorado;
 import com.codespace.tutorias.models.TutoriaTutorado;
 import com.codespace.tutorias.repository.TutorRepository;
 
@@ -19,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TutorService {
@@ -35,6 +38,8 @@ public class TutorService {
     private TutoriasRepository tutoriasRepository;
     @Autowired
     private TutoriaMapping tutoriaMapping;
+    @Autowired
+    private EmailService emailService;
 
 
     public List<TutoresPublicosDTO> mostrarTutoresPublicos(){
@@ -71,6 +76,29 @@ public class TutorService {
         return tutoriasRepository.findTutoriasPorTutor(matricula).stream()
                 .map(tutoriaMapping::convertirAPublicas)
                 .toList();
+    }
+
+    public void mandarCorreoRecuperacion(String correo){
+        Tutor tutor = tutorRepository.findByCorreo(correo);
+
+        String token = UUID.randomUUID().toString();
+        tutor.setTokenRecuperacion(token);
+        tutor.setTokenExpiracion(LocalDateTime.now().plusMinutes(30));
+
+        emailService.enviarCorreoRecuperacion(correo, tutor.getNombre(), token);
+    }
+
+    public void cambiarPasswordConToken(Tutor tutor, String token, String nuevaPassword) {
+
+        if (tutor.getTokenExpiracion() == null || tutor.getTokenExpiracion().isBefore(LocalDateTime.now())) {
+            throw new BusinessException("Token expirado");
+        }
+
+        tutor.setPassword(passwordEncoder.encode(nuevaPassword));
+        tutor.setTokenRecuperacion(null);
+        tutor.setTokenExpiracion(null);
+
+        tutorRepository.save(tutor);
     }
 
 }

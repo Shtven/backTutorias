@@ -66,7 +66,7 @@ public class TutoriaMapping {
         entidad.setFecha(dto.getFecha());
         entidad.setEdificio(dto.getEdificio());
         entidad.setAula(dto.getAula());
-        entidad.setEstado("ACTIVO");
+        entidad.setEstado("PENDIENTE");
 
         return entidad;
     }

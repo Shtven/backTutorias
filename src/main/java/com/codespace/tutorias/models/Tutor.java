@@ -7,6 +7,8 @@ package com.codespace.tutorias.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author shtven
@@ -21,6 +23,8 @@ public class Tutor {
     private String apellidoM;
     private String correo;
     private String password;
+    private String tokenRecuperacion;
+    private LocalDateTime tokenExpiracion;
 
     public Tutor(){ }
 
@@ -78,5 +82,21 @@ public class Tutor {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getTokenRecuperacion() {
+        return tokenRecuperacion;
+    }
+
+    public void setTokenRecuperacion(String tokenRecuperacion) {
+        this.tokenRecuperacion = tokenRecuperacion;
+    }
+
+    public LocalDateTime getTokenExpiracion() {
+        return tokenExpiracion;
+    }
+
+    public void setTokenExpiracion(LocalDateTime tokenExpiracion) {
+        this.tokenExpiracion = tokenExpiracion;
     }
 }
