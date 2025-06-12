@@ -80,7 +80,7 @@ public class AuthController {
         return ResponseEntity.ok(new ApiResponse<>(false, "El correo no está relacionado a algun usuario.", null));
     }
 
-    @PutMapping("/nuevaContraseña")
+    @PutMapping("/newPassword")
     public ResponseEntity<?> cambioPassword(@Valid CambioPasswordDTO dto){
         Tutor tutor = tutorRepository.findByTokenRecuperacion(dto.getToken()).orElseThrow(()
                 -> new BusinessException("Token invalido"));
