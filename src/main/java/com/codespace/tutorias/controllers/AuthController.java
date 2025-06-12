@@ -82,22 +82,20 @@ public class AuthController {
 
     @PutMapping("/newPassword")
     public ResponseEntity<?> cambioPassword(@Valid CambioPasswordDTO dto){
-        Tutor tutor = tutorRepository.findByTokenRecuperacion(dto.getToken()).orElseThrow(()
-                -> new BusinessException("Token invalido"));
-
-        if(tutor != null){
-            tutorService.cambiarPasswordConToken(tutor, dto.getToken(), dto.getPasswordNueva());
+        if(tutorRepository.findByTokenRecuperacion(dto.getToken()).isPresent()){
+            tutorService.cambiarPasswordConToken(dto.getToken(), dto.getPasswordNueva());
             return ResponseEntity.ok(new ApiResponse<>(true, "Contraseña cambiada correctamente", null));
+        }else{
+            return ResponseEntity.ok(new ApiResponse<>(false, "Token invalido para tutor", null));
         }
 
-        Tutorado tutorado = tutoradoRepository.findByTokenRecuperacion(dto.getToken()).orElseThrow(()
-                -> new BusinessException("Token invalido"));
-
-        if(tutorado != null){
-            tutoradoService.cambiarPasswordConToken(tutorado, dto.getToken(), dto.getPasswordNueva());
+        if(tutoradoRepository.findByTokenRecuperacion(dto.getToken()).isPresent()){
+            tutoradoService.cambiarPasswordConToken(dto.getToken(), dto.getPasswordNueva());
             return ResponseEntity.ok(new ApiResponse<>(true, "Contraseña cambiada correctamente", null));
+        }else{
+            return ResponseEntity.ok(new ApiResponse<>(false, "Token invalido para tutorado", null));
         }
-        return ResponseEntity.status(401).body(new ApiResponse<>(false, "Error en el token", null));
+        return ResponseEntity.ok(new ApiResponse<>(false, "Error en el token", null));
     }
 
 }
