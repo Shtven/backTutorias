@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,7 +100,7 @@ public class TutorService {
         Tutor tutor = tutorRepository.findByTokenRecuperacion(token).orElseThrow(()
         -> new BusinessException("El tutor no existe"));
 
-        if (tutor.getTokenExpiracion() == null || tutor.getTokenExpiracion().isBefore(LocalDateTime.now())) {
+        if (tutor.getTokenExpiracion() == null || tutor.getTokenExpiracion().isBefore(LocalDateTime.now(ZoneId.of("America/Mexico_City")))) {
             throw new BusinessException("Token expirado");
         }
 
