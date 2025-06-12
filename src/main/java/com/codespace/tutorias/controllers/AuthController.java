@@ -81,18 +81,19 @@ public class AuthController {
     }
 
     @PutMapping("/newPassword")
-    public ResponseEntity<?> cambioPassword(@Valid CambioPasswordDTO dto){
-        if(tutorRepository.findByTokenRecuperacion(dto.getToken()).isPresent()){
+    public ResponseEntity<?> cambioPassword(@Valid @RequestBody CambioPasswordDTO dto){
+        Optional<Tutor> tutor = tutorRepository.findByTokenRecuperacion(dto.getToken());
+        if (tutor.isPresent()) {
             tutorService.cambiarPasswordConToken(dto.getToken(), dto.getPasswordNueva());
             return ResponseEntity.ok(new ApiResponse<>(true, "Contraseña cambiada correctamente", null));
         }
 
-        if(tutoradoRepository.findByTokenRecuperacion(dto.getToken()).isPresent()){
+        Optional<Tutorado> tutorado = tutoradoRepository.findByTokenRecuperacion(dto.getToken());
+        if (tutorado.isPresent()) {
             tutoradoService.cambiarPasswordConToken(dto.getToken(), dto.getPasswordNueva());
             return ResponseEntity.ok(new ApiResponse<>(true, "Contraseña cambiada correctamente", null));
         }
 
-        return ResponseEntity.ok(new ApiResponse<>(false, "Error en el token", null));
+        throw new BusinessException("Token inválido o expirado");
     }
-
 }
