@@ -85,16 +85,13 @@ public class AuthController {
         if(tutorRepository.findByTokenRecuperacion(dto.getToken()).isPresent()){
             tutorService.cambiarPasswordConToken(dto.getToken(), dto.getPasswordNueva());
             return ResponseEntity.ok(new ApiResponse<>(true, "Contraseña cambiada correctamente", null));
-        }else{
-            return ResponseEntity.ok(new ApiResponse<>(false, "Token invalido para tutor", null));
         }
 
         if(tutoradoRepository.findByTokenRecuperacion(dto.getToken()).isPresent()){
             tutoradoService.cambiarPasswordConToken(dto.getToken(), dto.getPasswordNueva());
             return ResponseEntity.ok(new ApiResponse<>(true, "Contraseña cambiada correctamente", null));
-        }else{
-            return ResponseEntity.ok(new ApiResponse<>(false, "Token invalido para tutorado", null));
         }
+
         return ResponseEntity.ok(new ApiResponse<>(false, "Error en el token", null));
     }
 
