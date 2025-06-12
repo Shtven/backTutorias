@@ -1,9 +1,6 @@
 package com.codespace.tutorias.controllers;
 
-import com.codespace.tutorias.DTO.CambioPasswordDTO;
-import com.codespace.tutorias.DTO.LoginDTO;
-import com.codespace.tutorias.DTO.TutorDTO;
-import com.codespace.tutorias.DTO.TutoradoDTO;
+import com.codespace.tutorias.DTO.*;
 import com.codespace.tutorias.JWT.JWTUtil;
 import com.codespace.tutorias.exceptions.ApiResponse;
 import com.codespace.tutorias.exceptions.BusinessException;
@@ -68,15 +65,15 @@ public class AuthController {
     }
 
     @PostMapping("/correoRecuperacion")
-    public ResponseEntity<?> enviarCorreoRecuperacion(@RequestBody String correo){
-        Tutor tutor = tutorRepository.findByCorreo(correo);
+    public ResponseEntity<?> enviarCorreoRecuperacion(@RequestBody CorreoDTO dto){
+        Tutor tutor = tutorRepository.findByCorreo(dto.getCorreo());
         if(tutor != null){
-            tutorService.mandarCorreoRecuperacion(correo);
+            tutorService.mandarCorreoRecuperacion(dto.getCorreo());
             return ResponseEntity.ok(new ApiResponse<>(true, "Se ha enviado el correo de recuperación, verifica tu bandeja de entrada.", null));
         }else{
-            Tutorado tutorado = tutoradoRepository.findByCorreo(correo);
+            Tutorado tutorado = tutoradoRepository.findByCorreo(dto.getCorreo());
             if (tutorado != null){
-                tutoradoService.mandarCorreoRecuperacion(correo);
+                tutoradoService.mandarCorreoRecuperacion(dto.getCorreo());
                 return ResponseEntity.ok(new ApiResponse<>(true, "Se ha enviado el correo de recuperación, verifica tu bandeja de entrada.", null));
             }
         }
