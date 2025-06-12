@@ -147,7 +147,7 @@ public class TutoradoService {
         String token = UUID.randomUUID().toString();
         tutorado.setTokenRecuperacion(token);
         tutorado.setTokenExpiracion(LocalDateTime.now().plusMinutes(15));
-
+        tutoradoRepository.save(tutorado);
         emailService.enviarCorreoRecuperacion(correo, tutorado.getNombre(), token);
     }
 
