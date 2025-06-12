@@ -89,7 +89,7 @@ public class TutorService {
 
         String token = UUID.randomUUID().toString();
         tutor.setTokenRecuperacion(token);
-        tutor.setTokenExpiracion(LocalDateTime.now().plusMinutes(30));
+        tutor.setTokenExpiracion(LocalDateTime.now().plusMinutes(15));
 
         emailService.enviarCorreoRecuperacion(correo, tutor.getNombre(), token);
     }
