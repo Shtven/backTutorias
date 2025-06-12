@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.PUT, "/auth/newPassword").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/tutorado/registro", "/tutor/registro").permitAll()
                         .requestMatchers(HttpMethod.GET, "/tutorias/all", "/tutorias/{id}", "/tutorias/buscar").hasAnyRole("TUTOR", "TUTORADO", "ADMIN")
