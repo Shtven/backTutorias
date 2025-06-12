@@ -55,6 +55,12 @@ public class TutorService {
     }
 
     public TutorDTO crearTutores(TutorDTO dto) {
+        if(tutorRepository.findById(dto.getMatricula()).isPresent()){
+            throw new BusinessException("Ya hay un tutor con esa matricula asignada.");
+        }
+        if (tutorRepository.findByCorreo(dto.getCorreo()) != null) {
+            throw new BusinessException("Ya existe un tutor con ese correo electrónico.");
+        }
         Tutor tutor = tutorMapping.convertirAEntidad(dto);
         tutor.setPassword(passwordEncoder.encode(tutor.getPassword()));
         return tutorMapping.convertirADTO(tutorRepository.save(tutor));

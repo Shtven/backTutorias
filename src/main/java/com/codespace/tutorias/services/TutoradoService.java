@@ -53,6 +53,12 @@ public class TutoradoService {
     }
 
     public TutoradoDTO crearTutorados(TutoradoDTO dto) {
+        if(tutoradoRepository.findById(dto.getMatricula()).isPresent()){
+            throw new BusinessException("Ya existe un tutorado con esa matricula asignada.");
+        }
+        if(tutoradoRepository.findByCorreo(dto.getCorreo()) != null){
+            throw new BusinessException("Ya existe un tutorado con ese correo electronico");
+        }
         Tutorado tutorado = tutoradoMapping.convertirAEntidad(dto);
         tutorado.setPassword(passwordEncoder.encode(tutorado.getPassword()));
         return tutoradoMapping.convertirADTO(tutoradoRepository.save(tutorado));
