@@ -94,7 +94,9 @@ public class TutorService {
         emailService.enviarCorreoRecuperacion(correo, tutor.getNombre(), token);
     }
 
-    public void cambiarPasswordConToken(Tutor tutor, String token, String nuevaPassword) {
+    public void cambiarPasswordConToken(String token, String nuevaPassword) {
+        Tutor tutor = tutorRepository.findByTokenRecuperacion(token).orElseThrow(()
+        -> new BusinessException("El tutor no existe"));
 
         if (tutor.getTokenExpiracion() == null || tutor.getTokenExpiracion().isBefore(LocalDateTime.now())) {
             throw new BusinessException("Token expirado");
