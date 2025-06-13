@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/horarios/**").hasAnyRole("TUTOR", "ADMIN")
                         .requestMatchers("/tutorado/**").hasAnyRole("TUTORADO", "ADMIN")
                         .requestMatchers("/tutor/**").hasAnyRole("TUTOR", "ADMIN")
+                        .requestMatchers("/materias/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
